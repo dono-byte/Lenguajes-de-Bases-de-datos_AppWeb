@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Star - Medicamentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./public/css/citas.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            
+            <!-- Sidebar -->
+            <div class="col-auto sidebar position-relative">
+                <div class="logo text-center">
+                    <div class="logo-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4 class="mt-2">Clinic Star</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li><a href="index.html" class="nav-link"><i class="bi bi-speedometer2"></i> Inicio</a></li>
+                    <li><a href="pacientes.html" class="nav-link"><i class="bi bi-people"></i> Pacientes</a></li>
+                    <li><a href="citas.html" class="nav-link"><i class="bi bi-calendar-event"></i> Citas</a></li>
+                    <li><a href="expediente.html" class="nav-link"><i class="bi bi-folder2-open"></i> Expedientes</a></li>
+                    <li><a href="consultas.html" class="nav-link"><i class="bi bi-journal-medical"></i> Consultas</a></li>
+                    <li><a href="medicamentos.html" class="nav-link active"><i class="bi bi-capsule"></i> Medicamentos</a></li>
+                    <li><a href="medicos.html" class="nav-link"><i class="bi bi-person-badge"></i> Personal Médico</a></li>
+                </ul>
+                <div class="logout">
+                    <a href="login.html" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+                </div>
+            </div>
+
+            <!-- Contenido Principal -->
+            <div class="col contenido">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Medicamentos</h2>
+                    <button id="btnAbrirModalNuevo" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalMedicamento">
+                        <i class="bi bi-plus-circle"></i> Nuevo medicamento
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-5">
+                                <input type="text" id="buscarMedicamento" class="form-control" placeholder="Buscar medicamento...">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Stock</th>
+                                        <th>Precio</th>
+                                        <th>Descripción</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Paracetamol</td>
+                                        <td>150</td>
+                                        <td>$5.50</td>
+                                        <td>Analgésico y antipirético</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Crear / Editar Medicamento -->
+    <div class="modal fade" id="modalMedicamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="tituloModalMedicamento">Nuevo medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" id="nombreMedicamento" class="form-control" placeholder="Ej. Paracetamol">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stock</label>
+                        <input type="number" id="stockMedicamento" class="form-control" placeholder="Ej. 100">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input type="number" step="0.01" id="precioMedicamento" class="form-control" placeholder="Ej. 5.50">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" id="descripcionMedicamento" class="form-control" placeholder="Ej. Analgésico">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarMedicamento" class="btn btn-warning text-dark">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Medicamento -->
+    <div class="modal fade" id="modalVerMedicamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Detalles del Medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nombre:</strong> <span id="verNombre"></span></p>
+                    <p><strong>Stock:</strong> <span id="verStock"></span></p>
+                    <p><strong>Precio:</strong> <span id="verPrecio"></span></p>
+                    <p><strong>Descripción:</strong> <span id="verDescripcion"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./public/js/medicamentos.js"></script>
+</body>
+
+</html>
