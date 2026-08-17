@@ -1,0 +1,44 @@
+body {
+    background: #f5f7fb;
+}
+
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: #0d3b78;
+}
+
+.logo {
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.nav-link {
+    color: white;
+    margin: 8px 15px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.nav-link:hover,
+.activo {
+    background: #0d6efd;
+}
+
+.logout {
+    position: absolute;
+    bottom: 25px;
+    width: 210px;
+}
+
+.contenido {
+    padding: 35px;
+    background: #f5f7fb;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}

@@ -1,0 +1,60 @@
+body {
+    background: #f5f7fb;
+}
+
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: #0d3b78;
+}
+
+.logo {
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.nav-link {
+    color: white;
+    margin: 8px 15px;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.nav-link:hover,
+.activo {
+    background: #0d6efd;
+}
+
+.logout {
+    position: absolute;
+    bottom: 25px;
+    width: 210px;
+}
+
+.contenido {
+    background: #f5f7fb;
+    padding: 35px;
+}
+
+.card-dashboard {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+}
+
+.numero {
+    font-size: 34px;
+    font-weight: bold;
+    color: #0d3b78;
+}
+
+.titulo-card {
+    font-size: 15px;
+    color: #6c757d;
+}
+
+.icono {
+    font-size: 28px;
+    color: #0d6efd;
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Star - Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar (Menu)-->
+            <div class="col-auto sidebar position-relative">
+                <div class="logo text-center">
+                    <div class="logo-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4 class="mt-2">Clinic Star</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li>
+                        <a href="/" class="nav-link active"><i class="bi bi-speedometer2"></i> Inicio</a>
+                    </li>
+                    <li>
+                        <a href="/pacientes" class="nav-link"><i class="bi bi-people"></i> Pacientes</a>
+                    </li>
+                    <li>
+                        <a href="/citas" class="nav-link"><i class="bi bi-calendar-event"></i> Citas</a>
+                    </li>
+                    <li>
+                        <a href="/expediente" class="nav-link"><i class="bi bi-folder2-open"></i> Expedientes</a>
+                    </li>
+                    <li>
+                        <a href="/consultas" class="nav-link"><i class="bi bi-journal-medical"></i> Consultas</a>
+                    </li>
+                </ul>
+                <div class="logout">
+                    <a href="/login" class="nav-link">
+                        <i class="bi bi-box-arrow-right"></i>Cerrar sesión</a>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="col contenido">
+                <h2 class="mb-4">Inicio</h2>
+                <div class="row g-4">
+                    <!-- Card -->
+                    <div class="col-lg-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body text-center">
+                                <div class="icono mb-3">
+                                    <i class="bi bi-people"></i>
+                                </div>
+                                <p class="titulo-card">Pacientes registrados</p>
+                                <div class="numero">5</div>
+                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card -->
+                    <div class="col-lg-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body text-center">
+                                <div class="icono mb-3">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <p class="titulo-card">Citas de hoy</p>
+                                <div class="numero">23</div>
+                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card -->
+                    <div class="col-lg-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body text-center">
+                                <div class="icono mb-3">
+                                    <i class="bi bi-journal-medical"></i>
+                                </div>
+                                <p class="titulo-card">Consultas realizadas</p>
+                                <div class="numero">45</div>
+                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card -->
+                    <div class="col-lg-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body text-center">
+                                <div class="icono mb-3">
+                                    <i class="bi bi-folder2-open"></i>
+                                </div>
+                                <p class="titulo-card">Expedientes activos</p>
+                                <div class="numero">342</div>
+                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aquí continúa la gráfica y el panel de próximas citas -->
+                <!-- Gráfico y Próximas Citas -->
+                <div class="row mt-4">
+                    <!-- Gráfico -->
+                    <div class="col-lg-8">
+                        <div class="card card-dashboard h-100">
+                            <div class="card-body">
+                                <h5 class="mb-4">Citas por semana</h5>
+                                <canvas id="graficoCitas" height="120"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Próximas citas -->
+                    <div class="col-lg-4">
+                        <div class="card card-dashboard h-100">
+                            <div class="card-body">
+                                <h5 class="mb-4">Próximas citas</h5>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td>08:00</td>
+                                            <td>Juan Pérez Gómez</td>
+                                        </tr>
+                                        <tr>
+                                            <td>09:30</td>
+                                            <td>María López Sánchez</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00</td>
+                                            <td>Carlos Ruiz Vargas</td>
+                                        </tr>
+                                        <tr>
+                                            <td>14:00</td>
+                                            <td>Ana Morales Chaves</td>
+                                        </tr>
+                                        <tr>
+                                            <td>15:30</td>
+                                            <td>Luis Castro Vega</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="text-end">
+                                    <a href="#" class="text-decoration-none">Ver todas las citas</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('graficoCitas');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [
+                    'Lun',
+                    'Mar',
+                    'Mié',
+                    'Jue',
+                    'Vie',
+                    'Sáb',
+                    'Dom'
+                ],
+
+                datasets: [{
+                    label: 'Citas',
+                    data: [
+                        20,
+                        40,
+                        32,
+                        50,
+                        25,
+                        40,
+                        48
+                    ],
+
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13,110,253,.2)',
+                    tension: .4,
+                    fill: false
+                }]
+            },
+
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Star - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="text-center mb-4">
+                <div class="logo-icon">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <h1 class="clinic-title">Clinic Star</h1>
+                <p class="text-muted">Sistema de Gestión Clínica</p>
+            </div>
+            <!-- Formulario -->
+            <form id="formLogin">
+                <!-- Usuario -->
+                <div class="mb-3">
+                    <label class="form-label">Usuario</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" id="usuario" class="form-control" placeholder="Ingrese su usuario">
+                    </div>
+                </div>
+                <!-- Contraseña -->
+                <div class="mb-4">
+                    <label class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña">
+                    </div>
+                </div>
+                <!-- Botón -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-login">Iniciar sesión</button>
+                </div>
+                <!-- Mensaje JS -->
+                <div id="mensajeLogin" class="mt-3"></div>
+            </form>
+            <!-- Recuperar contraseña -->
+            <div class="text-center mt-4">
+                <a href="#" class="forgot-password">¿Olvidó su contraseña?</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/login.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+target/
+.mvn/wrapper/maven-wrapper.jar
+HELP.md
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+
+# Build
+build/
+out/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets - NUNCA subir
+application-local.properties
+*.env

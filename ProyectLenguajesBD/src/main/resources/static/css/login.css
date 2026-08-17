@@ -1,0 +1,81 @@
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e8f4ff, #ffffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: white;
+    width: 420px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.12);
+}
+
+.logo-icon {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    font-size: 40px;
+}
+
+.clinic-title {
+    margin-top: 15px;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.input-group-text {
+    background: #f1f5f9;
+    border: none;
+}
+
+.form-control {
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+.btn-login {
+    background: #0d6efd;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.btn-login:hover {
+    background: #084298;
+    color: white;
+}
+
+.forgot-password {
+    text-decoration: none;
+    color: #0d6efd;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
