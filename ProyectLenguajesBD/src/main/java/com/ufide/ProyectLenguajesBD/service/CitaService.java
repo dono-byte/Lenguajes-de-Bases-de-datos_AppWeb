@@ -1,0 +1,51 @@
+package com.ufide.ProyectLenguajesBD.service;
+
+import com.ufide.ProyectLenguajesBD.entity.Cita;
+import com.ufide.ProyectLenguajesBD.repository.CitaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class CitaService {
+    
+    @Autowired
+    private CitaRepository citaRepository;
+
+    public List<Cita> obtenerTodos() {
+        return citaRepository.findAll();
+    }
+
+    public Optional<Cita> obtenerPorId(Integer id) {
+        return citaRepository.findById(id);
+    }
+
+    public List<Cita> obtenerPorPaciente(Integer pacienteId) {
+        return citaRepository.findByPacientePkPaciente(pacienteId);
+    }
+
+    public List<Cita> obtenerPorRangoFecha(LocalDateTime inicio, LocalDateTime fin) {
+        return citaRepository.findByFechaHoraBetween(inicio, fin);
+    }
+
+    public Cita guardar(Cita cita) {
+        return citaRepository.save(cita);
+    }
+
+    public void eliminar(Integer id) {
+        citaRepository.deleteById(id);
+    }
+
+    public Cita actualizar(Integer id, Cita citaActualizada) {
+        return citaRepository.findById(id)
+                .map(cita -> {
+                    cita.setFechaHora(citaActualizada.getFechaHora());
+                    cita.setDuracion(citaActualizada.getDuracion());
+                    cita.setEstado(citaActualizada.getEstado());
+                    return citaRepository.save(cita);
+                })
+                .orElse(null);
+    }
+}
