@@ -1,0 +1,196 @@
+body {
+    background: #f5f7fb;
+}
+
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: #0d3b78;
+}
+
+.logo {
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.nav-link {
+    color: white;
+    margin: 8px 15px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #0d6efd;
+}
+
+.logout {
+    position: absolute;
+    bottom: 25px;
+    width: 210px;
+}
+
+.contenido {
+    padding: 35px;
+    background: #f5f7fb;
+}
+
+h2 {
+    font-weight: bold;
+    color: #0d3b78;
+    margin-bottom: 25px;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.card-header {
+    background: white;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.card-body p {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    color: #6c757d;
+    margin: 0;
+    border-radius: 0;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    border: none;
+    border-bottom: 3px solid #0d6efd;
+    background: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #0d6efd;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #cfe2ff;
+    color: #000;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fbff;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.btn-primary {
+    padding: 8px 18px;
+}
+
+.btn-ver {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #0d6efd;
+    color: white;
+    transition: .3s;
+}
+
+.btn-ver:hover {
+    background: #084298;
+}
+
+.accion-btn {
+    margin: 0 2px;
+}
+
+.btn-info,
+.btn-warning,
+.btn-danger {
+    color: white;
+}
+
+.pagination .page-link {
+    color: #0d6efd;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.modal-header {
+    border-bottom: none;
+    background: #0d6efd;
+    color: white;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.form-control,
+.form-select,
+textarea {
+    border-radius: 8px;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .contenido {
+        padding: 20px;
+    }
+    .table {
+        font-size: 14px;
+    }
+    .btn-primary {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .pagination {
+        justify-content: center;
+    }
+}

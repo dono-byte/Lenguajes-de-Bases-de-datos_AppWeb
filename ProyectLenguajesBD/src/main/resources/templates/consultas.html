@@ -92,14 +92,12 @@
                             <!-- Buscar paciente -->
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Paciente</label>
-                                <input type="text" id="buscarPaciente" class="form-control"
-                                    placeholder="Buscar paciente...">
+                                <input type="text" id="buscarPaciente" class="form-control" placeholder="Buscar paciente...">
                             </div>
 
                             <!-- Botón Filtrar -->
                             <div class="col-md-2 d-flex align-items-end">
-                                <button id="btnFiltrar" class="btn btn-primary w-100"><i
-                                        class="bi bi-search"></i>Filtrar</button>
+                                <button id="btnFiltrar" class="btn btn-primary w-100"><i class="bi bi-search"></i>Filtrar</button>
                             </div>
                         </div>
 
@@ -118,36 +116,97 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tablaConsultas">
-                                    <tr th:each="consulta : ${consultas}">
-                                        <td th:text="${#dates.format(consulta.fechaConsulta, 'dd/MM/yyyy')}"></td>
-                                        <td th:text="${consulta.expediente.paciente.nombre}"></td>
-                                        <td th:text="${consulta.personalMedico.nombre}"></td>
-                                        <td th:text="${consulta.motivo}"></td>
-                                        <td
-                                            th:text="${consulta.diagnostico != null ? consulta.diagnostico.descripcion : 'Sin diagnóstico'}">
-                                        </td>
-                                        <td>
-                                            <!-- Obtener primer medicamento de la primera receta (puede ser null) -->
-                                            <span
-                                                th:if="${consulta.recetas != null and !consulta.recetas.isEmpty() and consulta.recetas[0].detalleRecetas != null and !consulta.recetas[0].detalleRecetas.isEmpty()}"
-                                                class="badge bg-info text-dark"
-                                                th:text="${consulta.recetas[0].detalleRecetas[0].medicamento.nombre}">
-                                            </span>
-                                            <span
-                                                th:unless="${consulta.recetas != null and !consulta.recetas.isEmpty() and consulta.recetas[0].detalleRecetas != null and !consulta.recetas[0].detalleRecetas.isEmpty()}"
-                                                class="badge bg-secondary">N/A</span>
-                                        </td>
+                                    <tr>
+                                        <td>10/05/2025</td>
+                                        <td>Juan Pérez Gómez</td>
+                                        <td>Dr. Martínez</td>
+                                        <td>Dolor de cabeza</td>
+                                        <td>Cefalea tensional</td>
+                                        <td><span class="badge bg-info text-dark">Paracetamol</span></td>
                                         <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"
-                                                th:data-id="${consulta.pkConsulta}">
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"
-                                                th:data-id="${consulta.pkConsulta}">
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"
-                                                th:data-id="${consulta.pkConsulta}">
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>22/04/2025</td>
+                                        <td>María López Sánchez</td>
+                                        <td>Dra. Ramírez</td>
+                                        <td>Fiebre y tos</td>
+                                        <td>Infección respiratoria</td>
+                                        <td><span class="badge bg-info text-dark">Ibuprofeno</span></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/03/2025</td>
+                                        <td>Carlos Ruiz Vargas</td>
+                                        <td>Dr. Martínez</td>
+                                        <td>Dolor abdominal</td>
+                                        <td>Gastritis</td>
+                                        <td><span class="badge bg-info text-dark">Omeprazol</span></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/03/2025</td>
+                                        <td>Ana Morales Chaves</td>
+                                        <td>Dra. Ramírez</td>
+                                        <td>Control de rutina</td>
+                                        <td>Sin hallazgos</td>
+                                        <td><span class="badge bg-secondary">N/A</span></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>20/02/2025</td>
+                                        <td>Luis Castro Vega</td>
+                                        <td>Dr. Martínez</td>
+                                        <td>Dolor lumbar</td>
+                                        <td>Lumbalgia</td>
+                                        <td><span class="badge bg-info text-dark">Ibuprofeno</span></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
@@ -205,8 +264,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Medicamento</label>
-                                    <input type="text" id="medicamentoConsulta" class="form-control"
-                                        placeholder="Ej. Paracetamol">
+                                    <input type="text" id="medicamentoConsulta" class="form-control" placeholder="Ej. Paracetamol">
                                 </div>
                             </div>
                         </form>
