@@ -48,8 +48,8 @@ public class LoginController {
                 return "redirect:/?nombre=" + usuario; 
             } else {
                 // Si la clave no coincide, volvemos a mostrar el login con un mensaje
-                modelo.addAttribute("error", "Usuario o contraseña incorrectos.");
-                return "login";
+modelo.addAttribute("error", "Usuario o contraseña incorrectos.");
+return "login";           
             }
 
         } catch (IllegalStateException e) {

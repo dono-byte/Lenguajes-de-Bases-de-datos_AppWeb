@@ -8,5 +8,5 @@ import java.util.List;
  * Repository de DetalleReceta.
  */
 public interface DetalleRecetaRepository extends JpaRepository<DetalleReceta, Integer> {
-    List<DetalleReceta> findByRecetaId(Integer recetaId);
+    List<DetalleReceta> findByRecetaPkReceta(Integer recetaId);
 }

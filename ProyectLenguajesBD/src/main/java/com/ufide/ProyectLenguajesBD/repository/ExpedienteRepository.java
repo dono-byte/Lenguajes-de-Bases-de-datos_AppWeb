@@ -8,5 +8,5 @@ import java.util.Optional;
  * Repository de Expediente.
  */
 public interface ExpedienteRepository extends JpaRepository<Expediente, Integer> {
-    Optional<Expediente> findByPacienteId(Integer pacienteId);
+    Optional<Expediente> findByPacientePkPaciente(Integer pacienteId);
 }

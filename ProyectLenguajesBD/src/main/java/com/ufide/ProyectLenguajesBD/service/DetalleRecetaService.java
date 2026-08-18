@@ -22,7 +22,7 @@ public class DetalleRecetaService {
     }
 
     public List<DetalleReceta> obtenerPorReceta(Integer recetaId) {
-        return detalleRecetaRepository.findByRecetaId(recetaId);
+        return detalleRecetaRepository.findByRecetaPkReceta(recetaId);
     }
 
     public DetalleReceta guardar(DetalleReceta detalleReceta) {

@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" th:href="@{/templates/static/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
                 <p class="text-muted">Sistema de Gestión Clínica</p>
             </div>
             <!-- Formulario -->
-            <form id="formLogin">
+            <form id="formLogin" method="post" action="/login">
                 <!-- Usuario -->
                 <div class="mb-3">
                     <label class="form-label">Usuario</label>
@@ -31,7 +31,7 @@
                         <span class="input-group-text">
                             <i class="bi bi-person"></i>
                         </span>
-                        <input type="text" id="usuario" class="form-control" placeholder="Ingrese su usuario">
+                        <input type="text" id="usuario" name="usuario" class="form-control" placeholder="Ingrese su usuario">
                     </div>
                 </div>
                 <!-- Contraseña -->
@@ -41,14 +41,19 @@
                         <span class="input-group-text">
                             <i class="bi bi-lock"></i>
                         </span>
-                        <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña">
+                        <input type="password" id="password" name="contrasena" class="form-control" placeholder="Ingrese su contraseña">
                     </div>
+                </div>
+                <!-- Aviso de error del servidor -->
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span th:text="${error}"></span>
                 </div>
                 <!-- Botón -->
                 <div class="d-grid">
                     <button type="submit" class="btn btn-login">Iniciar sesión</button>
                 </div>
-                <!-- Mensaje JS -->
+                <!-- Mensaje JS (opcional) -->
                 <div id="mensajeLogin" class="mt-3"></div>
             </form>
             <!-- Recuperar contraseña -->
@@ -59,7 +64,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/templates/static/js/login.js}"></script>
-
+    <script th:src="@{/js/login.js}"></script>
 </body>
+
 </html>

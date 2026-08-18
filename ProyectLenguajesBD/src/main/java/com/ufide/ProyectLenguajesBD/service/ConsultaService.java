@@ -22,11 +22,11 @@ public class ConsultaService {
     }
 
     public List<Consulta> obtenerPorExpediente(Integer expedienteId) {
-        return consultaRepository.findByExpedienteId(expedienteId);
+        return consultaRepository.findByExpedientePkExpediente(expedienteId);
     }
 
     public List<Consulta> obtenerPorMedico(Integer medicoId) {
-        return consultaRepository.findByPersonalMedicoId(medicoId);
+        return consultaRepository.findByPersonalMedicoPkPersonalMedico(medicoId);
     }
 
     public Consulta guardar(Consulta consulta) {

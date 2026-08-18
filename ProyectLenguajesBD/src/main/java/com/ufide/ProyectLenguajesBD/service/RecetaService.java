@@ -22,7 +22,7 @@ public class RecetaService {
     }
 
     public List<Receta> obtenerPorConsulta(Integer consultaId) {
-        return recetaRepository.findByConsultaId(consultaId);
+        return recetaRepository.findByConsultaPkConsulta(consultaId);
     }
 
     public Receta guardar(Receta receta) {

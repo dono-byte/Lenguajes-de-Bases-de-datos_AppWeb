@@ -22,7 +22,7 @@ public class DetalleMedicamentoService {
     }
 
     public List<DetalleMedicamento> obtenerPorMedicamento(Integer medicamentoId) {
-        return detalleMedicamentoRepository.findByMedicamentoId(medicamentoId);
+        return detalleMedicamentoRepository.findByMedicamentoPkMedicamento(medicamentoId);
     }
 
     public DetalleMedicamento guardar(DetalleMedicamento detalleMedicamento) {

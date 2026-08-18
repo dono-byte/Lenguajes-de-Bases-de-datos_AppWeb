@@ -8,6 +8,6 @@ import java.util.List;
  * Repository de Consulta.
  */
 public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
-    List<Consulta> findByExpedienteId(Integer expedienteId);
-    List<Consulta> findByPersonalMedicoId(Integer personalMedicoId);
+    List<Consulta> findByExpedientePkExpediente(Integer expedienteId);
+    List<Consulta> findByPersonalMedicoPkPersonalMedico(Integer personalMedicoId);
 }

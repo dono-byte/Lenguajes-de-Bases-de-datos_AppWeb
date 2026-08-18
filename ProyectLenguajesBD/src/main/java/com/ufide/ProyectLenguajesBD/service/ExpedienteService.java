@@ -22,7 +22,7 @@ public class ExpedienteService {
     }
 
     public Optional<Expediente> obtenerPorPaciente(Integer pacienteId) {
-        return expedienteRepository.findByPacienteId(pacienteId);
+        return expedienteRepository.findByPacientePkPaciente(pacienteId);
     }
 
     public Expediente guardar(Expediente expediente) {
