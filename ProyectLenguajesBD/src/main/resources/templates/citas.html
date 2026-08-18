@@ -89,6 +89,9 @@
                                         <th>Fecha</th>
                                         <th>Hora</th>
                                         <th>Médico</th>
+                                        <th>Consultorio</th>
+                                        <th>Ciudad</th>
+                                        <th>Provincia</th>
                                         <th>Estado</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
@@ -100,6 +103,9 @@
                                         <td>20/07/2026</td>
                                         <td>08:00 AM</td>
                                         <td>Dr. González</td>
+                                        <td>101</td>
+                                        <td>San José</td>
+                                        <td>San José</td>
                                         <td>
                                             <span class="badge bg-warning text-dark">Pendiente</span>
                                         </td>
@@ -121,6 +127,9 @@
                                         <td>20/07/2026</td>
                                         <td>09:30 AM</td>
                                         <td>Dra. Vargas</td>
+                                        <td>202</td>
+                                        <td>Alajuela</td>
+                                        <td>Alajuela</td>
                                         <td>
                                             <span class="badge bg-success">Confirmada</span>
                                         </td>
@@ -142,6 +151,9 @@
                                         <td>21/07/2026</td>
                                         <td>02:00 PM</td>
                                         <td>Dr. Herrera</td>
+                                        <td>305</td>
+                                        <td>Heredia</td>
+                                        <td>Heredia</td>
                                         <td>
                                             <span class="badge bg-danger">Cancelada</span>
                                         </td>
@@ -211,6 +223,18 @@
                             <label>Médico</label>
                             <input id="medico" class="form-control">
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Consultorio</label>
+                            <input id="consultorio" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Ciudad</label>
+                            <input id="ciudad" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Provincia</label>
+                            <input id="provincia" class="form-control">
+                        </div>
                         <div class="col-md-12 mb-3">
                             <label>Estado</label>
                             <select id="estado" class="form-select">
@@ -242,6 +266,9 @@
                     <p><b>Fecha:</b> <span id="verFecha"></span></p>
                     <p><b>Hora:</b> <span id="verHora"></span></p>
                     <p><b>Médico:</b> <span id="verMedico"></span></p>
+                    <p><b>Consultorio:</b> <span id="verConsultorio"></span></p>
+                    <p><b>Ciudad:</b> <span id="verCiudad"></span></p>
+                    <p><b>Provincia:</b> <span id="verProvincia"></span></p>
                     <p><b>Estado:</b> <span id="verEstado"></span></p>
                 </div>
             </div>
@@ -265,6 +292,12 @@
                     <input id="editarHora" class="form-control mb-3">
                     <label>Médico</label>
                     <input id="editarMedico" class="form-control mb-3">
+                    <label>Consultorio</label>
+                    <input id="editarConsultorio" class="form-control mb-3">
+                    <label>Ciudad</label>
+                    <input id="editarCiudad" class="form-control mb-3">
+                    <label>Provincia</label>
+                    <input id="editarProvincia" class="form-control mb-3">
                     <label>Estado</label>
                     <select id="editarEstado" class="form-select">
                         <option>Pendiente</option>

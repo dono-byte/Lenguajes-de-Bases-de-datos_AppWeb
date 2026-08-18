@@ -30,6 +30,12 @@ document.getElementById("guardarCita")
             document.getElementById("hora").value;
         let medico =
             document.getElementById("medico").value;
+        let consultorio =
+            document.getElementById("consultorio").value;
+        let ciudad =
+            document.getElementById("ciudad").value;
+        let provincia =
+            document.getElementById("provincia").value;
         let estado =
             document.getElementById("estado").value;
 
@@ -53,6 +59,9 @@ document.getElementById("guardarCita")
     <td>${fecha}</td>
     <td>${hora}</td>
     <td>${medico}</td>
+    <td>${consultorio}</td>
+    <td>${ciudad}</td>
+    <td>${provincia}</td>
     <td>
         <span class="badge ${estadoClase}">
             ${estado}
@@ -82,6 +91,9 @@ document.getElementById("guardarCita")
         document.getElementById("fecha").value = "";
         document.getElementById("hora").value = "";
         document.getElementById("medico").value = "";
+        document.getElementById("consultorio").value = "";
+        document.getElementById("ciudad").value = "";
+        document.getElementById("provincia").value = "";
 
         //Cerrar modal
         bootstrap.Modal.getInstance(
@@ -136,8 +148,14 @@ function verCita(fila) {
         fila.children[3].textContent;
     document.getElementById("verMedico").textContent =
         fila.children[4].textContent;
+    document.getElementById("verConsultorio").textContent =
+        fila.children[5].textContent;
+    document.getElementById("verCiudad").textContent =
+        fila.children[6].textContent;
+    document.getElementById("verProvincia").textContent =
+        fila.children[7].textContent;
     document.getElementById("verEstado").innerHTML =
-        fila.children[5].innerHTML;
+        fila.children[8].innerHTML;
     let modal = new bootstrap.Modal(
         document.getElementById("modalVerCita")
     );
@@ -155,8 +173,14 @@ function editarCita(fila) {
         fila.children[3].textContent;
     document.getElementById("editarMedico").value =
         fila.children[4].textContent;
+    document.getElementById("editarConsultorio").value =
+        fila.children[5].textContent;
+    document.getElementById("editarCiudad").value =
+        fila.children[6].textContent;
+    document.getElementById("editarProvincia").value =
+        fila.children[7].textContent;
     document.getElementById("editarEstado").value =
-        fila.children[5].textContent.trim();
+        fila.children[8].textContent.trim();
     let modal = new bootstrap.Modal(
         document.getElementById("modalEditarCita")
     );
@@ -176,7 +200,13 @@ document.getElementById("actualizarCita")
             document.getElementById("editarHora").value;
         filaActual.children[4].textContent =
             document.getElementById("editarMedico").value;
-        filaActual.children[5].innerHTML = `
+        filaActual.children[5].textContent =
+            document.getElementById("editarConsultorio").value;
+        filaActual.children[6].textContent =
+            document.getElementById("editarCiudad").value;
+        filaActual.children[7].textContent =
+            document.getElementById("editarProvincia").value;
+        filaActual.children[8].innerHTML = `
         <span class="badge ${obtenerClaseEstado(estado)}">
             ${estado}
         </span>

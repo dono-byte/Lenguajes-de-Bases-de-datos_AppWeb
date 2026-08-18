@@ -29,6 +29,7 @@ document.getElementById("guardarConsulta")
     let medico = document.getElementById("doctorConsulta").value;
     let motivo = document.getElementById("motivoConsulta").value;
     let diagnostico = document.getElementById("diagnosticoConsulta").value;
+    let medicamento = document.getElementById("medicamentoConsulta").value;
 
     // Validación básica
     if (
@@ -38,6 +39,10 @@ document.getElementById("guardarConsulta")
         return;
     }
 
+    let medicamentoHtml = medicamento
+        ? `<span class="badge bg-info text-dark">${medicamento}</span>`
+        : `<span class="badge bg-secondary">N/A</span>`;
+
     // Crear nueva fila
     let fila = tablaConsultas.insertRow();
     fila.innerHTML = `
@@ -46,6 +51,7 @@ document.getElementById("guardarConsulta")
         <td>${medico}</td>
         <td>${motivo}</td>
         <td>${diagnostico}</td>
+        <td>${medicamentoHtml}</td>
 
         <td class="text-center">
 
@@ -134,6 +140,9 @@ function verConsulta(fila){
     document.getElementById("verDiagnostico").textContent =
         fila.children[4].textContent;
 
+    document.getElementById("verMedicamento").textContent =
+        fila.children[5].textContent.trim();
+
     let modal = new bootstrap.Modal(
         document.getElementById("modalVerConsulta")
     );
@@ -156,6 +165,9 @@ function editarConsulta(fila){
     document.getElementById("editarDiagnostico").value =
         fila.children[4].textContent;
 
+    document.getElementById("editarMedicamento").value =
+        fila.children[5].textContent.trim();
+
     let modal = new bootstrap.Modal(
         document.getElementById("modalEditarConsulta")
     );
@@ -177,6 +189,11 @@ document.getElementById("actualizarConsulta")
 
     filaActual.children[4].textContent =
         document.getElementById("editarDiagnostico").value;
+
+    let medicamento = document.getElementById("editarMedicamento").value;
+    filaActual.children[5].innerHTML = medicamento
+        ? `<span class="badge bg-info text-dark">${medicamento}</span>`
+        : `<span class="badge bg-secondary">N/A</span>`;
 
     bootstrap.Modal.getInstance(
         document.getElementById("modalEditarConsulta")

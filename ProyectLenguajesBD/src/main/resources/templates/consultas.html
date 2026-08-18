@@ -111,6 +111,7 @@
                                         <th>Médico</th>
                                         <th>Motivo de consulta</th>
                                         <th>Diagnóstico</th>
+                                        <th>Medicamento</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
@@ -121,6 +122,7 @@
                                         <td>Dr. Martínez</td>
                                         <td>Dolor de cabeza</td>
                                         <td>Cefalea tensional</td>
+                                        <td><span class="badge bg-info text-dark">Paracetamol</span></td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm accion-btn" data-action="ver">
                                                 <i class="bi bi-eye"></i>
@@ -139,6 +141,7 @@
                                         <td>Dra. Ramírez</td>
                                         <td>Fiebre y tos</td>
                                         <td>Infección respiratoria</td>
+                                        <td><span class="badge bg-info text-dark">Ibuprofeno</span></td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm accion-btn" data-action="ver">
                                                 <i class="bi bi-eye"></i>
@@ -157,6 +160,7 @@
                                         <td>Dr. Martínez</td>
                                         <td>Dolor abdominal</td>
                                         <td>Gastritis</td>
+                                        <td><span class="badge bg-info text-dark">Omeprazol</span></td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm accion-btn" data-action="ver">
                                                 <i class="bi bi-eye"></i>
@@ -175,6 +179,7 @@
                                         <td>Dra. Ramírez</td>
                                         <td>Control de rutina</td>
                                         <td>Sin hallazgos</td>
+                                        <td><span class="badge bg-secondary">N/A</span></td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm accion-btn" data-action="ver">
                                                 <i class="bi bi-eye"></i>
@@ -193,6 +198,7 @@
                                         <td>Dr. Martínez</td>
                                         <td>Dolor lumbar</td>
                                         <td>Lumbalgia</td>
+                                        <td><span class="badge bg-info text-dark">Ibuprofeno</span></td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm accion-btn" data-action="ver">
                                                 <i class="bi bi-eye"></i>
@@ -252,9 +258,13 @@
                                     <label>Motivo de consulta</label>
                                     <input type="text" id="motivoConsulta" class="form-control">
                                 </div>
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label>Diagnóstico</label>
-                                    <textarea id="diagnosticoConsulta" class="form-control" rows="3"></textarea>
+                                    <input type="text" id="diagnosticoConsulta" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Medicamento</label>
+                                    <input type="text" id="medicamentoConsulta" class="form-control" placeholder="Ej. Paracetamol">
                                 </div>
                             </div>
                         </form>
@@ -283,6 +293,7 @@
                         <p><b>Médico:</b> <span id="verDoctor"></span></p>
                         <p><b>Motivo:</b> <span id="verMotivo"></span></p>
                         <p><b>Diagnóstico:</b> <span id="verDiagnostico"></span></p>
+                        <p><b>Medicamento:</b> <span id="verMedicamento"></span></p>
                     </div>
                 </div>
             </div>
@@ -309,7 +320,9 @@
                         <label>Motivo de consulta</label>
                         <input id="editarMotivo" class="form-control mb-3">
                         <label>Diagnóstico</label>
-                        <textarea id="editarDiagnostico" class="form-control" rows="3"></textarea>
+                        <input id="editarDiagnostico" class="form-control mb-3">
+                        <label>Medicamento</label>
+                        <input id="editarMedicamento" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

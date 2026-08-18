@@ -14,7 +14,7 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            
+
             <!-- Sidebar -->
             <div class="col-auto sidebar position-relative">
                 <div class="logo text-center">
@@ -46,37 +46,94 @@
                         <i class="bi bi-plus-circle"></i> Nuevo medicamento
                     </button>
                 </div>
-                <div class="card">
+
+                <div class="card mb-4">
                     <div class="card-body">
                         <div class="row mb-4">
                             <div class="col-md-5">
                                 <input type="text" id="buscarMedicamento" class="form-control" placeholder="Buscar medicamento...">
                             </div>
                         </div>
-                        <div class="table-responsive">
+
+                        <!-- Detalle de medicamentos -->
+                        <h5 class="mb-3"><i class="bi bi-capsule"></i> Detalle de medicamentos</h5>
+                        <div class="table-responsive mb-4">
                             <table class="table table-hover align-middle">
                                 <thead class="table-primary">
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Stock</th>
-                                        <th>Precio</th>
-                                        <th>Descripción</th>
+                                        <th>Medicamento</th>
+                                        <th>Presentación</th>
+                                        <th>Concentración</th>
+                                        <th>Entradas</th>
+                                        <th>Salidas</th>
+                                        <th>Lote</th>
+                                        <th>Vencimiento</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tablaMedicamentos">
                                     <tr>
                                         <td>1</td>
                                         <td>Paracetamol</td>
+                                        <td>Tabletas</td>
+                                        <td>500 mg</td>
                                         <td>150</td>
-                                        <td>$5.50</td>
-                                        <td>Analgésico y antipirético</td>
+                                        <td>20</td>
+                                        <td>LOT-001</td>
+                                        <td>31/12/2027</td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
                                             <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
                                             <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Ibuprofeno</td>
+                                        <td>Cápsulas</td>
+                                        <td>400 mg</td>
+                                        <td>200</td>
+                                        <td>30</td>
+                                        <td>LOT-002</td>
+                                        <td>15/10/2027</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Detalle de recetas -->
+                        <h5 class="mb-3"><i class="bi bi-file-earmark-medical"></i> Detalle de recetas</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID Receta</th>
+                                        <th>Medicamento</th>
+                                        <th>Dosis</th>
+                                        <th>Frecuencia</th>
+                                        <th>Indicaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaRecetas">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Paracetamol</td>
+                                        <td>1 tableta</td>
+                                        <td>Cada 8 horas</td>
+                                        <td>Tomar después de las comidas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Ibuprofeno</td>
+                                        <td>1 cápsula</td>
+                                        <td>Cada 12 horas</td>
+                                        <td>Tomar con agua</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -89,28 +146,42 @@
 
     <!-- Modal para Crear / Editar Medicamento -->
     <div class="modal fade" id="modalMedicamento" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-warning text-dark">
                     <h5 class="modal-title" id="tituloModalMedicamento">Nuevo medicamento</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" id="nombreMedicamento" class="form-control" placeholder="Ej. Paracetamol">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Stock</label>
-                        <input type="number" id="stockMedicamento" class="form-control" placeholder="Ej. 100">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Precio</label>
-                        <input type="number" step="0.01" id="precioMedicamento" class="form-control" placeholder="Ej. 5.50">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Descripción</label>
-                        <input type="text" id="descripcionMedicamento" class="form-control" placeholder="Ej. Analgésico">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Medicamento</label>
+                            <input type="text" id="nombreMedicamento" class="form-control" placeholder="Ej. Paracetamol">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Presentación</label>
+                            <input type="text" id="presentacionMedicamento" class="form-control" placeholder="Ej. Tabletas">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Concentración</label>
+                            <input type="text" id="concentracionMedicamento" class="form-control" placeholder="Ej. 500 mg">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Lote</label>
+                            <input type="text" id="loteMedicamento" class="form-control" placeholder="Ej. LOT-001">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Entradas</label>
+                            <input type="number" id="entradasMedicamento" class="form-control" placeholder="Ej. 150">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Salidas</label>
+                            <input type="number" id="salidasMedicamento" class="form-control" placeholder="Ej. 20">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Vencimiento</label>
+                            <input type="date" id="vencimientoMedicamento" class="form-control">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -130,10 +201,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Nombre:</strong> <span id="verNombre"></span></p>
-                    <p><strong>Stock:</strong> <span id="verStock"></span></p>
-                    <p><strong>Precio:</strong> <span id="verPrecio"></span></p>
-                    <p><strong>Descripción:</strong> <span id="verDescripcion"></span></p>
+                    <p><strong>Medicamento:</strong> <span id="verNombre"></span></p>
+                    <p><strong>Presentación:</strong> <span id="verPresentacion"></span></p>
+                    <p><strong>Concentración:</strong> <span id="verConcentracion"></span></p>
+                    <p><strong>Entradas:</strong> <span id="verEntradas"></span></p>
+                    <p><strong>Salidas:</strong> <span id="verSalidas"></span></p>
+                    <p><strong>Lote:</strong> <span id="verLote"></span></p>
+                    <p><strong>Vencimiento:</strong> <span id="verVencimiento"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
