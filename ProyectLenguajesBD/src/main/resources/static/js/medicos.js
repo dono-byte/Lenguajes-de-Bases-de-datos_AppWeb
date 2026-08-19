@@ -8,6 +8,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let filaEnEdicion = null;
 
+    cargarMedicos();
+
+    async function cargarMedicos() {
+        const respuesta = await fetch('/api/medicos');
+        const medicos = await respuesta.json();
+        tabla.innerHTML = medicos.map(medico => `<tr data-id="${medico.id}" data-usuario-id="${medico.usuarioId}" data-codigo="${medico.codigoMedico}" data-especialidad-id="${medico.especialidadId}">
+            <td>${medico.id}</td><td>${medico.nombre} ${medico.apellido}</td><td>${medico.especialidad || ''}</td>
+            <td>${medico.telefono || ''}</td><td>${medico.correoElectronico}</td><td>${medico.estado}</td>
+            <td class="text-center"><button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
+            <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button></td>
+        </tr>`).join('');
+    }
+
     // BUSCADOR GENERAL DE MÉDICOS
     if (buscarMedico) {
         buscarMedico.addEventListener('keyup', function () {
@@ -28,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btnAbrirModalNuevo.addEventListener('click', function () {
             filaEnEdicion = null;
             document.getElementById('tituloModalMedico').innerText = 'Nuevo médico';
+            document.getElementById('usuarioMedico').value = '';
+            document.getElementById('codigoMedico').value = '';
+            document.getElementById('apellidoMedico').value = '';
             document.getElementById('nombreMedico').value = '';
             document.getElementById('especialidadMedico').value = '';
             document.getElementById('telefonoMedico').value = '';
@@ -37,44 +54,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', function () {
+        btnGuardar.addEventListener('click', async function () {
+            const usuarioId = document.getElementById('usuarioMedico').value;
+            const codigoMedico = document.getElementById('codigoMedico').value;
+            const apellido = document.getElementById('apellidoMedico').value;
             const nombre = document.getElementById('nombreMedico').value;
-            const especialidad = document.getElementById('especialidadMedico').value;
+            const especialidadId = document.getElementById('especialidadMedico').value;
             const telefono = document.getElementById('telefonoMedico').value;
             const correo = document.getElementById('correoMedico').value;
             const estado = document.getElementById('estadoMedico').value;
 
-            if (!nombre || !especialidad) {
-                alert('Por favor complete al menos el nombre y la especialidad.');
+            if (!usuarioId || !codigoMedico || !apellido || !nombre || !especialidadId || !correo) {
+                alert('Complete los campos obligatorios.');
                 return;
             }
-
-            const badgeHtml = `<span class="badge ${claseEstado(estado)}">${estado}</span>`;
-
-            if (filaEnEdicion) {
-                filaEnEdicion.cells[1].innerText = nombre;
-                filaEnEdicion.cells[2].innerText = especialidad;
-                filaEnEdicion.cells[3].innerText = telefono || 'N/A';
-                filaEnEdicion.cells[4].innerText = correo || 'N/A';
-                filaEnEdicion.cells[5].innerHTML = badgeHtml;
-            } else {
-                const totalFilas = tabla.rows.length + 1;
-                const nuevaFila = document.createElement('tr');
-                nuevaFila.innerHTML = `
-                    <td>${totalFilas}</td>
-                    <td>${nombre}</td>
-                    <td>${especialidad}</td>
-                    <td>${telefono || 'N/A'}</td>
-                    <td>${correo || 'N/A'}</td>
-                    <td>${badgeHtml}</td>
-                    <td class="text-center">
-                        <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                tabla.appendChild(nuevaFila);
-            }
+            const datos = {usuarioId: Number(usuarioId), especialidadId: Number(especialidadId), nombre, apellido,
+                segApellido: '', codigoMedico, correoElectronico: correo, telefono, estado};
+            await fetch(filaEnEdicion ? `/api/medicos/${filaEnEdicion.dataset.id}` : '/api/medicos', {
+                method: filaEnEdicion ? 'PUT' : 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)
+            });
+            await cargarMedicos();
 
             const modalEl = document.getElementById('modalMedico');
             const modal = bootstrap.Modal.getInstance(modalEl);
@@ -82,13 +81,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    tabla.addEventListener('click', function (e) {
+    tabla.addEventListener('click', async function (e) {
         const fila = e.target.closest('tr');
         if (!fila) return;
 
         if (e.target.closest('.btn-eliminar')) {
             if (confirm('¿Está seguro de que desea eliminar este registro?')) {
-                fila.remove();
+                await fetch(`/api/medicos/${fila.dataset.id}`, {method: 'DELETE'});
+                await cargarMedicos();
             }
         }
 
@@ -107,8 +107,11 @@ document.addEventListener('DOMContentLoaded', function () {
             filaEnEdicion = fila;
 
             document.getElementById('tituloModalMedico').innerText = 'Editar médico';
-            document.getElementById('nombreMedico').value = fila.cells[1].innerText;
-            document.getElementById('especialidadMedico').value = fila.cells[2].innerText;
+            document.getElementById('usuarioMedico').value = fila.dataset.usuarioId;
+            document.getElementById('codigoMedico').value = fila.dataset.codigo;
+            document.getElementById('nombreMedico').value = fila.cells[1].innerText.split(' ')[0];
+            document.getElementById('apellidoMedico').value = fila.cells[1].innerText.split(' ').slice(1).join(' ');
+            document.getElementById('especialidadMedico').value = fila.dataset.especialidadId;
             document.getElementById('telefonoMedico').value = fila.cells[3].innerText;
             document.getElementById('correoMedico').value = fila.cells[4].innerText;
             document.getElementById('estadoMedico').value = fila.cells[5].innerText.trim();

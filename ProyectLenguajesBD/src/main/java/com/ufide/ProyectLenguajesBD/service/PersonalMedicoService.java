@@ -43,6 +43,7 @@ public class PersonalMedicoService {
                     medico.setNombre(medicoActualizado.getNombre());
                     medico.setApellido(medicoActualizado.getApellido());
                     medico.setSegApellido(medicoActualizado.getSegApellido());
+                    medico.setCodigoMedico(medicoActualizado.getCodigoMedico());
                     medico.setCorreoElectronico(medicoActualizado.getCorreoElectronico());
                     medico.setTelefono(medicoActualizado.getTelefono());
                     medico.setEstado(medicoActualizado.getEstado());

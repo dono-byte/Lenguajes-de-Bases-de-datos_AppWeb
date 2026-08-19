@@ -64,8 +64,8 @@
                                     <i class="bi bi-people"></i>
                                 </div>
                                 <p class="titulo-card">Pacientes registrados</p>
-                                <div class="numero">5</div>
-                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                                <div class="numero" th:text="${totalPacientes}">0</div>
+                                <a th:href="@{/pacientes}" class="text-decoration-none">Ver detalles</a>
                             </div>
                         </div>
                     </div>
@@ -78,8 +78,8 @@
                                     <i class="bi bi-calendar-event"></i>
                                 </div>
                                 <p class="titulo-card">Citas de hoy</p>
-                                <div class="numero">23</div>
-                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                                <div class="numero" th:text="${totalCitas}">0</div>
+                                <a th:href="@{/citas}" class="text-decoration-none">Ver detalles</a>
                             </div>
                         </div>
                     </div>
@@ -92,8 +92,8 @@
                                     <i class="bi bi-journal-medical"></i>
                                 </div>
                                 <p class="titulo-card">Consultas realizadas</p>
-                                <div class="numero">45</div>
-                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                                <div class="numero" th:text="${totalConsultas}">0</div>
+                                <a th:href="@{/consultas}" class="text-decoration-none">Ver detalles</a>
                             </div>
                         </div>
                     </div>
@@ -106,8 +106,8 @@
                                     <i class="bi bi-folder2-open"></i>
                                 </div>
                                 <p class="titulo-card">Expedientes activos</p>
-                                <div class="numero">342</div>
-                                <a href="#" class="text-decoration-none">Ver detalles</a>
+                                <div class="numero" th:text="${totalPacientes}">0</div>
+                                <a th:href="@{/expediente}" class="text-decoration-none">Ver detalles</a>
                             </div>
                         </div>
                     </div>
@@ -133,25 +133,9 @@
                                 <h5 class="mb-4">Próximas citas</h5>
                                 <table class="table table-borderless">
                                     <tbody>
-                                        <tr>
-                                            <td>08:00</td>
-                                            <td>Juan Pérez Gómez</td>
-                                        </tr>
-                                        <tr>
-                                            <td>09:30</td>
-                                            <td>María López Sánchez</td>
-                                        </tr>
-                                        <tr>
-                                            <td>11:00</td>
-                                            <td>Carlos Ruiz Vargas</td>
-                                        </tr>
-                                        <tr>
-                                            <td>14:00</td>
-                                            <td>Ana Morales Chaves</td>
-                                        </tr>
-                                        <tr>
-                                            <td>15:30</td>
-                                            <td>Luis Castro Vega</td>
+                                        <tr th:each="cita : ${citas}">
+                                            <td th:text="${#temporals.format(cita.fechaHora, 'HH:mm')}">--:--</td>
+                                            <td th:text="${cita.paciente.nombre}">Paciente</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -174,27 +158,11 @@
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: [
-                    'Lun',
-                    'Mar',
-                    'Mié',
-                    'Jue',
-                    'Vie',
-                    'Sáb',
-                    'Dom'
-                ],
+                    labels: [],
 
                 datasets: [{
                     label: 'Citas',
-                    data: [
-                        20,
-                        40,
-                        32,
-                        50,
-                        25,
-                        40,
-                        48
-                    ],
+                    data: [],
 
                     borderColor: '#0d6efd',
                     backgroundColor: 'rgba(13,110,253,.2)',

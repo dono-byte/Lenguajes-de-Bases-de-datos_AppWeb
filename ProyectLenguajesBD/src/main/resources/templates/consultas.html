@@ -84,8 +84,9 @@
                                 <label class="form-label fw-bold">Médico</label>
                                 <select id="medico" class="form-select">
                                     <option value="">Todos</option>
-                                    <option>Dr. Martínez</option>
-                                    <option>Dra. Ramírez</option>
+                                    <option th:each="medico : ${medicos}"
+                                        th:value="${medico.pkPersonalMedico}"
+                                        th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
                                 </select>
                             </div>
 
@@ -111,104 +112,20 @@
                                         <th>Médico</th>
                                         <th>Motivo de consulta</th>
                                         <th>Diagnóstico</th>
-                                        <th>Medicamento</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tablaConsultas">
-                                    <tr>
-                                        <td>10/05/2025</td>
-                                        <td>Juan Pérez Gómez</td>
-                                        <td>Dr. Martínez</td>
-                                        <td>Dolor de cabeza</td>
-                                        <td>Cefalea tensional</td>
-                                        <td><span class="badge bg-info text-dark">Paracetamol</span></td>
+                                    <tr th:each="consulta : ${consultas}">
+                                        <td th:text="${consulta.fechaConsulta}">Fecha</td>
+                                        <td th:text="${consulta.expediente.paciente.nombre}">Paciente</td>
+                                        <td th:text="${consulta.personalMedico.nombre + ' ' + consulta.personalMedico.apellido}">Médico</td>
+                                        <td th:text="${consulta.motivo}">Motivo</td>
+                                        <td th:text="${consulta.diagnostico != null ? consulta.diagnostico.descripcion : ''}">Diagnóstico</td>
                                         <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>22/04/2025</td>
-                                        <td>María López Sánchez</td>
-                                        <td>Dra. Ramírez</td>
-                                        <td>Fiebre y tos</td>
-                                        <td>Infección respiratoria</td>
-                                        <td><span class="badge bg-info text-dark">Ibuprofeno</span></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>15/03/2025</td>
-                                        <td>Carlos Ruiz Vargas</td>
-                                        <td>Dr. Martínez</td>
-                                        <td>Dolor abdominal</td>
-                                        <td>Gastritis</td>
-                                        <td><span class="badge bg-info text-dark">Omeprazol</span></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>01/03/2025</td>
-                                        <td>Ana Morales Chaves</td>
-                                        <td>Dra. Ramírez</td>
-                                        <td>Control de rutina</td>
-                                        <td>Sin hallazgos</td>
-                                        <td><span class="badge bg-secondary">N/A</span></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>20/02/2025</td>
-                                        <td>Luis Castro Vega</td>
-                                        <td>Dr. Martínez</td>
-                                        <td>Dolor lumbar</td>
-                                        <td>Lumbalgia</td>
-                                        <td><span class="badge bg-info text-dark">Ibuprofeno</span></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -245,13 +162,25 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Paciente</label>
-                                    <input type="text" id="pacienteConsulta" class="form-control">
+                                    <select id="pacienteConsulta" class="form-select">
+                                        <option value="">Seleccione un paciente</option>
+                                        <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Médico</label>
                                     <select id="doctorConsulta" class="form-select">
-                                        <option>Dr. Martínez</option>
-                                        <option>Dra. Ramírez</option>
+                                        <option th:each="medico : ${medicos}"
+                                            th:value="${medico.pkPersonalMedico}"
+                                            th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Cita</label>
+                                    <select id="citaConsulta" class="form-select">
+                                        <option value="">Seleccione una cita</option>
+                                        <option th:each="cita : ${citas}" th:value="${cita.pkCita}" th:data-paciente-id="${cita.paciente.pkPaciente}"
+                                            th:text="${cita.paciente.nombre + ' - ' + cita.fechaHora + ' - Consultorio ' + cita.consultorio.numeroConsultorio}">Cita</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -260,11 +189,14 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Diagnóstico</label>
-                                    <input type="text" id="diagnosticoConsulta" class="form-control">
+                                    <select id="diagnosticoConsulta" class="form-select">
+                                        <option value="">Sin diagnóstico</option>
+                                        <option th:each="diagnostico : ${diagnosticos}" th:value="${diagnostico.pkDiagnostico}" th:text="${diagnostico.descripcion}">Diagnóstico</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Medicamento</label>
-                                    <input type="text" id="medicamentoConsulta" class="form-control" placeholder="Ej. Paracetamol">
+                                    <label>Observaciones</label>
+                                    <input type="text" id="observacionesConsulta" class="form-control">
                                 </div>
                             </div>
                         </form>
@@ -293,7 +225,6 @@
                         <p><b>Médico:</b> <span id="verDoctor"></span></p>
                         <p><b>Motivo:</b> <span id="verMotivo"></span></p>
                         <p><b>Diagnóstico:</b> <span id="verDiagnostico"></span></p>
-                        <p><b>Medicamento:</b> <span id="verMedicamento"></span></p>
                     </div>
                 </div>
             </div>
@@ -311,18 +242,29 @@
                     <div class="modal-body">
                         <input type="hidden" id="filaEditar">
                         <label>Paciente</label>
-                        <input id="editarPaciente" class="form-control mb-3">
+                        <select id="editarPaciente" class="form-select mb-3">
+                            <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
+                        </select>
                         <label>Médico</label>
                         <select id="editarDoctor" class="form-select mb-3">
-                            <option>Dr. Martínez</option>
-                            <option>Dra. Ramírez</option>
+                            <option th:each="medico : ${medicos}"
+                                th:value="${medico.pkPersonalMedico}"
+                                th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
+                        </select>
+                        <label>Cita</label>
+                        <select id="editarCita" class="form-select mb-3">
+                            <option th:each="cita : ${citas}" th:value="${cita.pkCita}" th:data-paciente-id="${cita.paciente.pkPaciente}"
+                                th:text="${cita.paciente.nombre + ' - ' + cita.fechaHora + ' - Consultorio ' + cita.consultorio.numeroConsultorio}">Cita</option>
                         </select>
                         <label>Motivo de consulta</label>
                         <input id="editarMotivo" class="form-control mb-3">
                         <label>Diagnóstico</label>
-                        <input id="editarDiagnostico" class="form-control mb-3">
-                        <label>Medicamento</label>
-                        <input id="editarMedicamento" class="form-control">
+                        <select id="editarDiagnostico" class="form-select mb-3">
+                            <option value="">Sin diagnóstico</option>
+                            <option th:each="diagnostico : ${diagnosticos}" th:value="${diagnostico.pkDiagnostico}" th:text="${diagnostico.descripcion}">Diagnóstico</option>
+                        </select>
+                        <label>Observaciones</label>
+                        <input id="editarObservaciones" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

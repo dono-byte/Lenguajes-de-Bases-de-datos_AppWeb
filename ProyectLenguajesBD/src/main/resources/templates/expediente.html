@@ -56,6 +56,61 @@
             <div class="col-md-10 p-4">
                 <h2 class="fw-bold mb-4">Expediente Clínico</h2>
 
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Pacientes registrados</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Paciente</th>
+                                    <th>Cédula</th>
+                                    <th>Fecha de nacimiento</th>
+                                    <th>Género</th>
+                                    <th>Teléfono</th>
+                                    <th>Consultas</th>
+                                    <th>Medicamentos asignados</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="resumen : ${resumenPacientes}">
+                                    <td th:text="${resumen.nombre}">Paciente</td>
+                                    <td th:text="${resumen.cedula}">Cédula</td>
+                                    <td th:text="${resumen.fechaNacimiento}">Fecha</td>
+                                    <td th:text="${resumen.genero}">Género</td>
+                                    <td th:text="${resumen.telefono}">Teléfono</td>
+                                    <td>
+                                        <span th:if="${#lists.isEmpty(resumen.consultas)}" class="text-muted">Sin consultas</span>
+                                        <ul th:unless="${#lists.isEmpty(resumen.consultas)}" class="mb-0 ps-3">
+                                            <li th:each="consulta : ${resumen.consultas}"
+                                                th:text="${consulta.fechaConsulta + ' - ' + (consulta.motivo != null ? consulta.motivo : 'Sin motivo')}">Consulta</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <span th:if="${#lists.isEmpty(resumen.medicamentos)}" class="text-muted">Sin medicamentos</span>
+                                        <ul th:unless="${#lists.isEmpty(resumen.medicamentos)}" class="mb-0 ps-3">
+                                            <li th:each="medicamento : ${resumen.medicamentos}"
+                                                th:text="${medicamento.nombre + (medicamento.dosis != null ? ' - ' + medicamento.dosis : '') + (medicamento.frecuencia != null ? ' - ' + medicamento.frecuencia : '')}">Medicamento</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="selectorPaciente" class="form-label fw-semibold">Paciente</label>
+                    <select id="selectorPaciente" class="form-select">
+                        <option value="">Seleccione un paciente</option>
+                        <option th:each="paciente : ${pacientes}"
+                            th:value="${paciente.pkPaciente}"
+                            th:selected="${pacienteSeleccionado != null and paciente.pkPaciente == pacienteSeleccionado.pkPaciente}"
+                            th:text="${paciente.nombre + ' - ' + paciente.cedula}">Paciente</option>
+                    </select>
+                </div>
+
                 <!-- Datos del paciente -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
@@ -65,19 +120,19 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Nombre</label>
-                                <p id="nombrePaciente">Juan Pérez Gómez</p>
+                                <p id="nombrePaciente" th:text="${pacienteSeleccionado != null ? pacienteSeleccionado.nombre : ''}"></p>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Cédula</label>
-                                <p id="cedulaPaciente">1-1234-5678</p>
+                                <p id="cedulaPaciente" th:text="${pacienteSeleccionado != null ? pacienteSeleccionado.cedula : ''}"></p>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Fecha de nacimiento</label>
-                                <p id="fechaNacimiento">15/02/1990</p>
+                                <p id="fechaNacimiento" th:text="${pacienteSeleccionado != null ? pacienteSeleccionado.fechaNacimiento : ''}"></p>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Teléfono</label>
-                                <p id="telefonoPaciente">8888-1234</p>
+                                <p id="telefonoPaciente" th:text="${pacienteSeleccionado != null ? pacienteSeleccionado.telefono : ''}"></p>
                             </div>
                         </div>
                     </div>
@@ -110,8 +165,7 @@
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <button class="btn btn-primary" id="btnNuevaConsulta">
-                                        <i class="bi bi-plus-lg"></i>Nueva Consulta</button>
+                                    <span class="text-muted">Consultas registradas en la base de datos</span>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
@@ -125,37 +179,18 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tablaConsultas">
-                                            <tr>
-                                                <td>10/05/2025</td>
-                                                <td>Dr. Martínez</td>
-                                                <td>Dolor de cabeza</td>
-                                                <td>Cefalea tensional</td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-ver btnVisualizar"><i class="bi bi-eye-fill"></i></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>22/04/2025</td>
-                                                <td>Dra. Ramírez</td>
-                                                <td>Fiebre y tos</td>
-                                                <td>Infección respiratoria</td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-ver btnVisualizar"><i class="bi bi-eye-fill"></i></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>15/03/2025</td>
-                                                <td>Dr. Martínez</td>
-                                                <td>Dolor abdominal</td>
-                                                <td>Gastritis</td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-ver btnVisualizar"><i class="bi bi-eye-fill"></i></button>
+                                            <tr th:each="consulta : ${expediente != null ? expediente.consultas : {}}">
+                                                <td th:text="${consulta.fechaConsulta}">Fecha</td>
+                                                <td th:text="${consulta.personalMedico.nombre + ' ' + consulta.personalMedico.apellido}">Médico</td>
+                                                <td th:text="${consulta.motivo}">Motivo</td>
+                                                <td th:text="${consulta.diagnostico != null ? consulta.diagnostico.descripcion : ''}">Diagnóstico</td>
+                                                <td class="text-center"><button class="btn btn-ver btnVisualizar"><i class="bi bi-eye-fill"></i></button></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <small class="text-muted">Mostrando 1 a 3 de 3 consultas</small>
+                                    <small class="text-muted" th:text="${expediente != null ? 'Consultas registradas: ' + #lists.size(expediente.consultas) : 'Este paciente no tiene expediente clínico registrado'}"></small>
                                     <nav>
                                         <ul class="pagination pagination-sm mb-0">
                                             <li class="page-item disabled">
@@ -185,9 +220,8 @@
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 <h5 class="mb-3">Resumen del paciente</h5>
-                                <p>Aquí se mostrará un resumen general del expediente clínico del paciente,
-                                    incluyendo antecedentes, alergias, enfermedades crónicas y observaciones
-                                    importantes.</p>
+                                <p th:if="${expediente == null}" class="text-muted">Este paciente aún no tiene un expediente clínico registrado.</p>
+                                <p th:if="${expediente != null}" class="text-muted">El expediente fue creado el <span th:text="${expediente.fechaCreacion}"></span>.</p>
                             </div>
                         </div>
                     </div>
@@ -197,7 +231,10 @@
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 <h5 class="mb-3">Diagnósticos</h5>
-                                <p>En esta sección aparecerá el historial de diagnósticos realizados al paciente.</p>
+                                <ul th:if="${expediente != null}" class="list-group list-group-flush">
+                                    <li th:each="consulta : ${expediente.consultas}" class="list-group-item" th:text="${consulta.diagnostico != null ? consulta.diagnostico.descripcion : 'Consulta sin diagnóstico'}"></li>
+                                </ul>
+                                <p th:if="${expediente == null}" class="text-muted">No hay diagnósticos registrados.</p>
                             </div>
                         </div>
                     </div>
@@ -208,10 +245,14 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0">Recetas Médicas</h5>
-                                    <button class="btn btn-primary" id="btnNuevaReceta"><i
-                                            class="bi bi-plus-lg"></i>Nueva Receta</button>
                                 </div>
-                                <p class="text-muted">No hay recetas registradas para este paciente.</p>
+                                <ul th:if="${expediente != null}" class="list-group list-group-flush">
+                                    <th:block th:each="consulta : ${expediente.consultas}">
+                                        <li th:each="receta : ${consulta.recetas}"
+                                            th:text="${receta.fechaEmision}">Receta</li>
+                                    </th:block>
+                                </ul>
+                                <p th:if="${expediente == null}" class="text-muted">No hay recetas registradas para este paciente.</p>
                             </div>
                         </div>
                     </div>
@@ -222,8 +263,6 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0">Documentos</h5>
-                                    <button class="btn btn-primary" id="btnNuevoDocumento"><i
-                                            class="bi bi-upload"></i>Subir Documento</button>
                                 </div>
                                 <p class="text-muted">No existen documentos asociados al expediente.</p>
                             </div>
@@ -233,46 +272,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Nueva Consulta -->
-    <div class="modal fade" id="modalConsulta" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Nueva Consulta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formConsulta">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Fecha</label>
-                                <input type="date" class="form-control" id="fechaConsulta" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Médico</label>
-                                <input type="text" class="form-control" id="medicoConsulta"
-                                    placeholder="Nombre del médico" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Motivo de consulta</label>
-                            <textarea class="form-control" id="motivoConsulta" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Diagnóstico</label>
-                            <textarea class="form-control" id="diagnosticoConsulta" rows="3" required></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" form="formConsulta" class="btn btn-primary">Guardar Consulta</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/expediente.js}"></script>

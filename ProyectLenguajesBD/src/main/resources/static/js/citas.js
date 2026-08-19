@@ -1,237 +1,81 @@
-//Variables 
-const buscarCita = document.getElementById("buscarCita");
-const tablaCitas = document.querySelector("tbody");
+document.addEventListener('DOMContentLoaded', () => {
+    const tabla = document.querySelector('table tbody');
+    const buscar = document.getElementById('buscarCita');
+    let citaEnEdicion = null;
 
-//Guarda la fila que se está editando
-let filaActual = null;
+    cargarCitas();
 
-//BUSCADOR GENERAL DE CITA
-buscarCita.addEventListener("keyup", function () {
-    let texto = this.value.toLowerCase();
-    let filas = tablaCitas.querySelectorAll("tr");
-    filas.forEach(function (fila) {
-        let datos = fila.textContent.toLowerCase();
-        fila.style.display = datos.includes(texto)
-            ? ""
-            : "none";
+    async function cargarCitas() {
+        const respuesta = await fetch('/api/citas');
+        const citas = await respuesta.json();
+        tabla.innerHTML = citas.map(cita => {
+            const fecha = cita.fechaHora.slice(0, 10);
+            const hora = cita.fechaHora.slice(11, 16);
+            return `<tr data-id="${cita.id}" data-paciente-id="${cita.pacienteId}" data-consultorio-id="${cita.consultorioId}" data-duracion="${cita.duracion || ''}">
+                <td>${cita.id}</td><td>${cita.paciente}</td><td>${fecha}</td><td>${hora}</td>
+                <td>${cita.consultorio}</td><td>${cita.localidad || ''}</td><td>${cita.provincia || ''}</td><td>${cita.estado}</td>
+                <td class="text-center"><button class="btn btn-info btn-sm accion-btn" data-action="ver"><i class="bi bi-eye"></i></button>
+                <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i class="bi bi-pencil"></i></button>
+                <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button></td>
+            </tr>`;
+        }).join('');
+    }
+
+    buscar.addEventListener('keyup', () => {
+        const texto = buscar.value.toLowerCase();
+        tabla.querySelectorAll('tr').forEach(fila => fila.style.display = fila.textContent.toLowerCase().includes(texto) ? '' : 'none');
     });
-});
 
-//CREAR NUEVA CITA
-document.getElementById("guardarCita")
-    .addEventListener("click", function () {
-
-        //Obtiene los datos del formulario
-        let paciente =
-            document.getElementById("paciente").value;
-        let fecha =
-            document.getElementById("fecha").value;
-        let hora =
-            document.getElementById("hora").value;
-        let medico =
-            document.getElementById("medico").value;
-        let consultorio =
-            document.getElementById("consultorio").value;
-        let ciudad =
-            document.getElementById("ciudad").value;
-        let provincia =
-            document.getElementById("provincia").value;
-        let estado =
-            document.getElementById("estado").value;
-
-        //Validación
-        if (
-            paciente === "" ||
-            fecha === "" ||
-            hora === "" ||
-            medico === ""
-        ) {
-            alert("Debe completar todos los campos");
+    document.getElementById('guardarCita').addEventListener('click', async () => {
+        const fecha = document.getElementById('fecha').value;
+        const hora = document.getElementById('hora').value;
+        const datos = {pacienteId: Number(document.getElementById('paciente').value),
+            consultorioId: Number(document.getElementById('consultorio').value), fechaHora: `${fecha}T${hora}`,
+            duracion: document.getElementById('duracion').value, estado: document.getElementById('estado').value};
+        if (!datos.pacienteId || !datos.consultorioId || !fecha || !hora) {
+            alert('Complete los campos obligatorios');
             return;
         }
-
-        // Crear nueva fila
-        let fila = tablaCitas.insertRow();
-        let estadoClase = obtenerClaseEstado(estado);
-        fila.innerHTML = `
-    <td>${tablaCitas.rows.length}</td>
-    <td>${paciente}</td>
-    <td>${fecha}</td>
-    <td>${hora}</td>
-    <td>${medico}</td>
-    <td>${consultorio}</td>
-    <td>${ciudad}</td>
-    <td>${provincia}</td>
-    <td>
-        <span class="badge ${estadoClase}">
-            ${estado}
-        </span>
-    </td>
-    <td class="text-center">
-        <button 
-        class="btn btn-info btn-sm accion-btn"
-        data-action="ver">
-            <i class="bi bi-eye"></i>
-        </button>
-        <button 
-        class="btn btn-warning btn-sm accion-btn"
-        data-action="editar">
-            <i class="bi bi-pencil"></i>
-        </button>
-        <button 
-        class="btn btn-danger btn-sm accion-btn"
-        data-action="eliminar">
-            <i class="bi bi-trash"></i>
-        </button>
-    </td>
-    `;
-
-        //Limpiar formulario
-        document.getElementById("paciente").value = "";
-        document.getElementById("fecha").value = "";
-        document.getElementById("hora").value = "";
-        document.getElementById("medico").value = "";
-        document.getElementById("consultorio").value = "";
-        document.getElementById("ciudad").value = "";
-        document.getElementById("provincia").value = "";
-
-        //Cerrar modal
-        bootstrap.Modal.getInstance(
-            document.getElementById("modalNuevaCita")
-        ).hide();
+        await fetch('/api/citas', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)});
+        bootstrap.Modal.getInstance(document.getElementById('modalNuevaCita')).hide();
+        await cargarCitas();
     });
 
-//BOTONES GENERALES
-document.addEventListener("click", function (event) {
-    let boton = event.target.closest(".accion-btn");
-    if (!boton) return;
-    let accion = boton.dataset.action;
-    let fila = boton.closest("tr");
-    switch (accion) {
+    tabla.addEventListener('click', async event => {
+        const boton = event.target.closest('.accion-btn');
+        if (!boton) return;
+        const fila = boton.closest('tr');
+        if (boton.dataset.action === 'ver') {
+            document.getElementById('verPaciente').textContent = fila.cells[1].textContent;
+            document.getElementById('verFecha').textContent = fila.cells[2].textContent;
+            document.getElementById('verHora').textContent = fila.cells[3].textContent;
+            document.getElementById('verConsultorio').textContent = fila.cells[4].textContent;
+            document.getElementById('verCiudad').textContent = fila.cells[5].textContent;
+            document.getElementById('verProvincia').textContent = fila.cells[6].textContent;
+            document.getElementById('verEstado').textContent = fila.cells[7].textContent;
+            new bootstrap.Modal(document.getElementById('modalVerCita')).show();
+        } else if (boton.dataset.action === 'editar') {
+            citaEnEdicion = fila;
+            document.getElementById('editarPaciente').value = fila.dataset.pacienteId;
+            document.getElementById('editarFecha').value = fila.cells[2].textContent;
+            document.getElementById('editarHora').value = fila.cells[3].textContent;
+            document.getElementById('editarConsultorio').value = fila.dataset.consultorioId;
+            document.getElementById('editarDuracion').value = fila.dataset.duracion;
+            document.getElementById('editarEstado').value = fila.cells[7].textContent;
+            new bootstrap.Modal(document.getElementById('modalEditarCita')).show();
+        } else if (boton.dataset.action === 'eliminar' && confirm('¿Eliminar esta cita?')) {
+            await fetch(`/api/citas/${fila.dataset.id}`, {method: 'DELETE'});
+            await cargarCitas();
+        }
+    });
 
-        //VER
-        case "ver":
-            verCita(fila);
-            break;
-
-        //EDITAR
-        case "editar":
-            editarCita(fila);
-            break;
-
-        // ELIMINAR
-        case "eliminar":
-            let paciente =
-                fila.children[1].textContent;
-            let confirmar = confirm(
-                "¿Desea eliminar la cita de "
-                + paciente
-                + "?"
-            );
-            if (confirmar) {
-                fila.remove();
-                alert(
-                    "Cita eliminada correctamente"
-                );
-            }
-            break;
-    }
+    document.getElementById('actualizarCita').addEventListener('click', async () => {
+        const datos = {pacienteId: Number(document.getElementById('editarPaciente').value),
+            consultorioId: Number(document.getElementById('editarConsultorio').value),
+            fechaHora: `${document.getElementById('editarFecha').value}T${document.getElementById('editarHora').value}`,
+            duracion: document.getElementById('editarDuracion').value, estado: document.getElementById('editarEstado').value};
+        await fetch(`/api/citas/${citaEnEdicion.dataset.id}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)});
+        bootstrap.Modal.getInstance(document.getElementById('modalEditarCita')).hide();
+        await cargarCitas();
+    });
 });
-
-//MUESTRA LA INFORMACIÓN DE  LA CITA
-function verCita(fila) {
-    document.getElementById("verPaciente").textContent =
-        fila.children[1].textContent;
-    document.getElementById("verFecha").textContent =
-        fila.children[2].textContent;
-    document.getElementById("verHora").textContent =
-        fila.children[3].textContent;
-    document.getElementById("verMedico").textContent =
-        fila.children[4].textContent;
-    document.getElementById("verConsultorio").textContent =
-        fila.children[5].textContent;
-    document.getElementById("verCiudad").textContent =
-        fila.children[6].textContent;
-    document.getElementById("verProvincia").textContent =
-        fila.children[7].textContent;
-    document.getElementById("verEstado").innerHTML =
-        fila.children[8].innerHTML;
-    let modal = new bootstrap.Modal(
-        document.getElementById("modalVerCita")
-    );
-    modal.show();
-}
-
-//CARGAR DATOS PARA EDITAR
-function editarCita(fila) {
-    filaActual = fila;
-    document.getElementById("editarPaciente").value =
-        fila.children[1].textContent;
-    document.getElementById("editarFecha").value =
-        fila.children[2].textContent;
-    document.getElementById("editarHora").value =
-        fila.children[3].textContent;
-    document.getElementById("editarMedico").value =
-        fila.children[4].textContent;
-    document.getElementById("editarConsultorio").value =
-        fila.children[5].textContent;
-    document.getElementById("editarCiudad").value =
-        fila.children[6].textContent;
-    document.getElementById("editarProvincia").value =
-        fila.children[7].textContent;
-    document.getElementById("editarEstado").value =
-        fila.children[8].textContent.trim();
-    let modal = new bootstrap.Modal(
-        document.getElementById("modalEditarCita")
-    );
-    modal.show();
-}
-
-//GUARDAR CAMBIOS DE EDICIÓN
-document.getElementById("actualizarCita")
-    .addEventListener("click", function () {
-        let estado =
-            document.getElementById("editarEstado").value;
-        filaActual.children[1].textContent =
-            document.getElementById("editarPaciente").value;
-        filaActual.children[2].textContent =
-            document.getElementById("editarFecha").value;
-        filaActual.children[3].textContent =
-            document.getElementById("editarHora").value;
-        filaActual.children[4].textContent =
-            document.getElementById("editarMedico").value;
-        filaActual.children[5].textContent =
-            document.getElementById("editarConsultorio").value;
-        filaActual.children[6].textContent =
-            document.getElementById("editarCiudad").value;
-        filaActual.children[7].textContent =
-            document.getElementById("editarProvincia").value;
-        filaActual.children[8].innerHTML = `
-        <span class="badge ${obtenerClaseEstado(estado)}">
-            ${estado}
-        </span>
-    `;
-
-        bootstrap.Modal.getInstance(
-            document.getElementById("modalEditarCita")
-        ).hide();
-
-        alert(
-            "Cita actualizada correctamente"
-        );
-
-    });
-
-//CLASES PARA ESTADOS
-function obtenerClaseEstado(estado) {
-    switch (estado) {
-        case "Pendiente":
-            return "bg-warning text-dark";
-        case "Confirmada":
-            return "bg-success";
-        case "Cancelada":
-            return "bg-danger";
-        default:
-            return "bg-secondary";
-    }
-}
