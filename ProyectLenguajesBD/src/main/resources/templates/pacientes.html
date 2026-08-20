@@ -82,109 +82,26 @@
                                         <th>ID</th>
                                         <th>Cédula</th>
                                         <th>Nombre</th>
-                                        <th>Apellido</th>
+                                        <th>Fecha de nacimiento</th>
+                                        <th>Género</th>
                                         <th>Teléfono</th>
-                                        <th>Correo</th>
-                                        <th>Estado</th>
+                                        <th>Dirección</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>1-1234-5678</td>
-                                        <td>Juan</td>
-                                        <td>Pérez</td>
-                                        <td>8888-1111</td>
-                                        <td>juan@email.com</td>
-                                        <td>
-                                            <span class="badge bg-success">Activo</span>
-                                        </td>
+                                    <tr th:each="paciente : ${pacientes}">
+                                        <td th:text="${paciente.pkPaciente}">0</td>
+                                        <td th:text="${paciente.cedula}">Cédula</td>
+                                        <td th:text="${paciente.nombre}">Paciente</td>
+                                        <td th:text="${paciente.fechaNacimiento}">Fecha</td>
+                                        <td th:text="${paciente.genero}">Género</td>
+                                        <td th:text="${paciente.telefono}">Sin teléfono</td>
+                                        <td th:text="${paciente.direccion}">Sin dirección</td>
                                         <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>2-3456-7890</td>
-                                        <td>María</td>
-                                        <td>López</td>
-                                        <td>8787-2222</td>
-                                        <td>maria@email.com</td>
-                                        <td>
-                                            <span class="badge bg-success">Activo
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>3-4567-8901</td>
-                                        <td>Carlos</td>
-                                        <td>Ruiz</td>
-                                        <td>8999-3333</td>
-                                        <td>carlos@email.com</td>
-                                        <td>
-                                            <span class="badge bg-secondary">Inactivo</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>4-9876-5432</td>
-                                        <td>Ana</td>
-                                        <td>Morales</td>
-                                        <td>8555-4444</td>
-                                        <td>ana@email.com</td>
-                                        <td>
-                                            <span class="badge bg-success">Activo</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -236,16 +153,20 @@
                                     <input id="nombre" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Apellido</label>
-                                    <input id="apellido" class="form-control">
+                                    <label>Fecha de nacimiento</label>
+                                    <input id="fechaNacimiento" type="date" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Género</label>
+                                    <input id="genero" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Teléfono</label>
                                     <input id="telefono" class="form-control">
                                 </div>
-                                <div class="col-md-12 mb-3">
-                                    <label>Correo</label>
-                                    <input id="correo" class="form-control">
+                                <div class="col-md-6 mb-3">
+                                    <label>Dirección</label>
+                                    <input id="direccion" class="form-control">
                                 </div>
                             </div>
                         </form>
@@ -269,10 +190,10 @@
                     <div class="modal-body">
                         <p><b>Cédula:</b> <span id="verCedula"></span></p>
                         <p><b>Nombre:</b> <span id="verNombre"></span></p>
-                        <p><b>Apellido:</b> <span id="verApellido"></span></p>
+                        <p><b>Fecha de nacimiento:</b> <span id="verFechaNacimiento"></span></p>
+                        <p><b>Género:</b> <span id="verGenero"></span></p>
                         <p><b>Teléfono:</b> <span id="verTelefono"></span></p>
-                        <p><b>Correo:</b> <span id="verCorreo"></span></p>
-                        <p><b>Estado:</b> <span id="verEstado"></span></p>
+                        <p><b>Dirección:</b> <span id="verDireccion"></span></p>
                     </div>
                 </div>
             </div>
@@ -290,12 +211,14 @@
                         <input type="hidden" id="filaEditar">
                         <label>Nombre</label>
                         <input id="editarNombre" class="form-control mb-3">
-                        <label>Apellido</label>
-                        <input id="editarApellido" class="form-control mb-3">
+                        <label>Fecha de nacimiento</label>
+                        <input id="editarFechaNacimiento" type="date" class="form-control mb-3">
+                        <label>Género</label>
+                        <input id="editarGenero" class="form-control mb-3">
                         <label>Teléfono</label>
                         <input id="editarTelefono" class="form-control mb-3">
-                        <label>Correo</label>
-                        <input id="editarCorreo" class="form-control">
+                        <label>Dirección</label>
+                        <input id="editarDireccion" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

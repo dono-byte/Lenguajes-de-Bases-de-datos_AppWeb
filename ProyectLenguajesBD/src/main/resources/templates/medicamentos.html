@@ -45,6 +45,10 @@
                         data-bs-target="#modalMedicamento">
                         <i class="bi bi-plus-circle"></i> Nuevo medicamento
                     </button>
+                    <button id="btnAbrirModalAsignar" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#modalAsignarMedicamento">
+                        <i class="bi bi-person-plus"></i> Asignar a paciente
+                    </button>
                 </div>
 
                 <div class="card mb-4">
@@ -72,38 +76,7 @@
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tablaMedicamentos">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Paracetamol</td>
-                                        <td>Tabletas</td>
-                                        <td>500 mg</td>
-                                        <td>150</td>
-                                        <td>20</td>
-                                        <td>LOT-001</td>
-                                        <td>31/12/2027</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
-                                            <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
-                                            <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Ibuprofeno</td>
-                                        <td>Cápsulas</td>
-                                        <td>400 mg</td>
-                                        <td>200</td>
-                                        <td>30</td>
-                                        <td>LOT-002</td>
-                                        <td>15/10/2027</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
-                                            <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
-                                            <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="tablaMedicamentos"></tbody>
                             </table>
                         </div>
 
@@ -113,32 +86,66 @@
                             <table class="table table-hover align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>ID Receta</th>
+                                        <th>Paciente</th>
                                         <th>Medicamento</th>
                                         <th>Dosis</th>
                                         <th>Frecuencia</th>
-                                        <th>Indicaciones</th>
+                                        <th>Consulta</th>
+                                        <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tablaRecetas">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Paracetamol</td>
-                                        <td>1 tableta</td>
-                                        <td>Cada 8 horas</td>
-                                        <td>Tomar después de las comidas</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Ibuprofeno</td>
-                                        <td>1 cápsula</td>
-                                        <td>Cada 12 horas</td>
-                                        <td>Tomar con agua</td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="tablaRecetas"></tbody>
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAsignarMedicamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Asignar medicamento a paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Paciente</label>
+                        <select id="pacienteAsignacion" class="form-select">
+                            <option value="">Seleccione un paciente</option>
+                            <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre + ' - ' + paciente.cedula}">Paciente</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Consulta</label>
+                        <select id="consultaAsignacion" class="form-select">
+                            <option value="">Seleccione una consulta</option>
+                            <option th:each="consulta : ${consultas}" th:value="${consulta.pkConsulta}"
+                                th:data-paciente-id="${consulta.expediente.paciente.pkPaciente}"
+                                th:text="${consulta.fechaConsulta + ' - ' + consulta.expediente.paciente.nombre + ' - ' + consulta.motivo}">Consulta</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Medicamento</label>
+                        <select id="medicamentoAsignacion" class="form-select">
+                            <option value="">Seleccione un medicamento</option>
+                            <option th:each="medicamento : ${medicamentos}" th:value="${medicamento.pkMedicamento}" th:text="${medicamento.nombre}">Medicamento</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dosis</label>
+                        <input id="dosisAsignacion" class="form-control" placeholder="Ej. 1 tableta">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Frecuencia</label>
+                        <input id="frecuenciaAsignacion" class="form-control" placeholder="Ej. Cada 8 horas">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarAsignacion" class="btn btn-primary">Asignar medicamento</button>
                 </div>
             </div>
         </div>

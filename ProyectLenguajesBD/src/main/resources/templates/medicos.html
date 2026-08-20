@@ -67,26 +67,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Dr. Juan Pérez</td>
-                                        <td>Cardiología</td>
-                                        <td>8888-1111</td>
-                                        <td>juan.perez@clinicstar.com</td>
-                                        <td><span class="badge bg-success">Activo</span></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
-                                            <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
-                                            <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Dra. Ana Vargas</td>
-                                        <td>Pediatría</td>
-                                        <td>8888-2222</td>
-                                        <td>ana.vargas@clinicstar.com</td>
-                                        <td><span class="badge bg-secondary">Inactivo</span></td>
+                                    <tr th:each="medico : ${medicos}">
+                                        <td th:text="${medico.pkPersonalMedico}">0</td>
+                                        <td th:text="${medico.nombre + ' ' + medico.apellido}">Médico</td>
+                                        <td th:text="${#strings.listJoin(medico.medicoEspecialidades.![especialidad.nombre], ', ')}">Sin especialidad</td>
+                                        <td th:text="${medico.telefono}">Sin teléfono</td>
+                                        <td th:text="${medico.correoElectronico}">Sin correo</td>
+                                        <td th:text="${medico.estado}">Sin estado</td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm btn-ver"><i class="bi bi-eye"></i></button>
                                             <button class="btn btn-warning btn-sm btn-editar"><i class="bi bi-pencil"></i></button>
@@ -112,12 +99,30 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Nombre y Apellido</label>
-                        <input type="text" id="nombreMedico" class="form-control" placeholder="Ej. Dr. Carlos Ruiz">
+                        <label class="form-label">Usuario</label>
+                        <select id="usuarioMedico" class="form-select">
+                            <option value="" selected>Seleccione un usuario</option>
+                            <option th:each="usuario : ${usuarios}" th:value="${usuario.pkUsuario}" th:text="${usuario.usuario}">Usuario</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Código médico</label>
+                        <input type="text" id="codigoMedico" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Apellido</label>
+                        <input type="text" id="apellidoMedico" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" id="nombreMedico" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Especialidad</label>
-                        <input type="text" id="especialidadMedico" class="form-control" placeholder="Ej. Pediatría">
+                        <select id="especialidadMedico" class="form-select">
+                            <option value="" selected>Seleccione una especialidad</option>
+                            <option th:each="especialidad : ${especialidades}" th:value="${especialidad.pkEspecialidad}" th:text="${especialidad.nombre}">Especialidad</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Teléfono</label>
