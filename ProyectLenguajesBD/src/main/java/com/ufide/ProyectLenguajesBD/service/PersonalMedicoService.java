@@ -4,12 +4,15 @@ import com.ufide.ProyectLenguajesBD.entity.PersonalMedico;
 import com.ufide.ProyectLenguajesBD.repository.PersonalMedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PersonalMedicoService {
-    
+
     @Autowired
     private PersonalMedicoRepository personalMedicoRepository;
 
@@ -33,13 +36,10 @@ public class PersonalMedicoService {
         return personalMedicoRepository.save(personalMedico);
     }
 
-    public void eliminar(Integer id) {
-        personalMedicoRepository.deleteById(id);
-    }
-
     public PersonalMedico actualizar(Integer id, PersonalMedico medicoActualizado) {
         return personalMedicoRepository.findById(id)
                 .map(medico -> {
+                    medico.setUsuario(medicoActualizado.getUsuario());
                     medico.setNombre(medicoActualizado.getNombre());
                     medico.setApellido(medicoActualizado.getApellido());
                     medico.setSegApellido(medicoActualizado.getSegApellido());
@@ -49,6 +49,10 @@ public class PersonalMedicoService {
                     medico.setEstado(medicoActualizado.getEstado());
                     return personalMedicoRepository.save(medico);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Personal médico no encontrado con id: " + id));
+    }
+
+    public void eliminar(Integer id) {
+        personalMedicoRepository.deleteById(id);
     }
 }

@@ -1,62 +1,26 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.List;
 
-@Entity
-@Table(name = "PERSONAL_MEDICO")
 public class PersonalMedico {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_PERSONAL_MEDICO")
+
     private Integer pkPersonalMedico;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_USUARIO", nullable = false, foreignKey = @ForeignKey(name = "FK_PERSONAL_MEDICO_USUARIO"))
-    private Usuario usuario;
-
-    @Column(name = "NOMBRE", nullable = false, length = 100)
+    private Usuario usuario; // referencia
     private String nombre;
-
-    @Column(name = "APELLIDO", nullable = false, length = 100)
     private String apellido;
-
-    @Column(name = "SEG_APELLIDO", nullable = true, length = 100)
     private String segApellido;
-
-    @Column(name = "CODIGO_MEDICO", nullable = false, unique = true, length = 30)
     private String codigoMedico;
-
-    @Column(name = "CORREO_ELECTRONICO", nullable = false, unique = true, length = 100)
     private String correoElectronico;
-
-    @Column(name = "TELEFONO", nullable = true, length = 20)
     private String telefono;
-
-    @Column(name = "ESTADO", nullable = false, length = 20)
     private String estado;
-
-    @OneToMany(mappedBy = "personalMedico")
     private List<MedicoEspecialidad> medicoEspecialidades;
-
-    @OneToMany(mappedBy = "personalMedico")
     private List<Consulta> consultas;
 
-    // Constructores
-    public PersonalMedico() {}
+    public PersonalMedico() {
+    }
 
     public PersonalMedico(Usuario usuario, String nombre, String apellido, String segApellido,
-                         String codigoMedico, String correoElectronico, String telefono, String estado) {
+                          String codigoMedico, String correoElectronico, String telefono, String estado) {
         this.usuario = usuario;
         this.nombre = nombre;
         this.apellido = apellido;

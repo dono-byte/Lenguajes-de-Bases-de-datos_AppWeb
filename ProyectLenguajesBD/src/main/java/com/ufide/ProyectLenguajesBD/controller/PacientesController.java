@@ -1,20 +1,14 @@
 package com.ufide.ProyectLenguajesBD.controller;
 
+import com.ufide.ProyectLenguajesBD.entity.Paciente;
+import com.ufide.ProyectLenguajesBD.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import java.util.List;
-import com.ufide.ProyectLenguajesBD.service.PacienteService;
-import com.ufide.ProyectLenguajesBD.entity.Paciente;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class PacientesController {
@@ -35,11 +29,9 @@ public class PacientesController {
             @RequestParam LocalDate fechaNacimiento,
             @RequestParam String genero,
             @RequestParam(required = false) String telefono,
-            @RequestParam(required = false) String direccion,
-            Model model) {
+            @RequestParam(required = false) String direccion) {
         Paciente paciente = new Paciente(cedula, nombre, fechaNacimiento, genero, telefono, direccion);
         pacienteService.guardar(paciente);
-        model.addAttribute("pacientes", pacienteService.obtenerTodos());
         return "redirect:/pacientes";
     }
 
@@ -55,25 +47,40 @@ public class PacientesController {
         return "redirect:/pacientes";
     }
 
+    // --- API REST ---
     @GetMapping("/api/pacientes")
     @ResponseBody
     public List<PacienteResponse> listarApi() {
-        return pacienteService.obtenerTodos().stream().map(this::convertir).toList();
+        return pacienteService.obtenerTodos().stream()
+                .map(this::convertir)
+                .toList();
     }
 
     @PostMapping("/api/pacientes")
     @ResponseBody
     public PacienteResponse crearApi(@RequestBody PacienteRequest request) {
-        Paciente guardado = pacienteService.guardar(new Paciente(request.cedula(), request.nombre(), request.fechaNacimiento(),
-                request.genero(), request.telefono(), request.direccion()));
-        return convertir(guardado);
+        Paciente paciente = new Paciente(
+                request.cedula(),
+                request.nombre(),
+                request.fechaNacimiento(),
+                request.genero(),
+                request.telefono(),
+                request.direccion()
+        );
+        return convertir(pacienteService.guardar(paciente));
     }
 
     @PutMapping("/api/pacientes/{id}")
     @ResponseBody
     public PacienteResponse actualizarApi(@PathVariable Integer id, @RequestBody PacienteRequest request) {
-        Paciente paciente = new Paciente(request.cedula(), request.nombre(), request.fechaNacimiento(),
-                request.genero(), request.telefono(), request.direccion());
+        Paciente paciente = new Paciente(
+                request.cedula(),
+                request.nombre(),
+                request.fechaNacimiento(),
+                request.genero(),
+                request.telefono(),
+                request.direccion()
+        );
         Paciente actualizado = pacienteService.actualizar(id, paciente);
         if (actualizado == null) {
             throw new IllegalArgumentException("Paciente no encontrado");
@@ -87,14 +94,22 @@ public class PacientesController {
         pacienteService.eliminar(id);
     }
 
+    // --- DTOs y conversión ---
     public record PacienteRequest(String cedula, String nombre, LocalDate fechaNacimiento,
-            String genero, String telefono, String direccion) {}
+                                  String genero, String telefono, String direccion) {}
 
-        public record PacienteResponse(Integer id, String cedula, String nombre, LocalDate fechaNacimiento,
-            String genero, String telefono, String direccion) {}
+    public record PacienteResponse(Integer id, String cedula, String nombre, LocalDate fechaNacimiento,
+                                   String genero, String telefono, String direccion) {}
 
-        private PacienteResponse convertir(Paciente paciente) {
-        return new PacienteResponse(paciente.getPkPaciente(), paciente.getCedula(), paciente.getNombre(),
-            paciente.getFechaNacimiento(), paciente.getGenero(), paciente.getTelefono(), paciente.getDireccion());
-        }
+    private PacienteResponse convertir(Paciente paciente) {
+        return new PacienteResponse(
+                paciente.getPkPaciente(),
+                paciente.getCedula(),
+                paciente.getNombre(),
+                paciente.getFechaNacimiento(),
+                paciente.getGenero(),
+                paciente.getTelefono(),
+                paciente.getDireccion()
+        );
+    }
 }

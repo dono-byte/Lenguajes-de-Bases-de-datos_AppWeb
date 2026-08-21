@@ -4,12 +4,15 @@ import com.ufide.ProyectLenguajesBD.entity.Consultorio;
 import com.ufide.ProyectLenguajesBD.repository.ConsultorioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ConsultorioService {
-    
+
     @Autowired
     private ConsultorioRepository consultorioRepository;
 
@@ -25,10 +28,6 @@ public class ConsultorioService {
         return consultorioRepository.save(consultorio);
     }
 
-    public void eliminar(Integer id) {
-        consultorioRepository.deleteById(id);
-    }
-
     public Consultorio actualizar(Integer id, Consultorio consultorioActualizado) {
         return consultorioRepository.findById(id)
                 .map(consultorio -> {
@@ -37,6 +36,10 @@ public class ConsultorioService {
                     consultorio.setProvincia(consultorioActualizado.getProvincia());
                     return consultorioRepository.save(consultorio);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Consultorio no encontrado con id: " + id));
+    }
+
+    public void eliminar(Integer id) {
+        consultorioRepository.deleteById(id);
     }
 }

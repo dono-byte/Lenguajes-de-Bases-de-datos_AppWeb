@@ -1,18 +1,20 @@
 package com.ufide.ProyectLenguajesBD.service;
 
+import com.ufide.ProyectLenguajesBD.entity.DetalleMedicamento;
 import com.ufide.ProyectLenguajesBD.entity.Medicamento;
-import com.ufide.ProyectLenguajesBD.repository.MedicamentoRepository;
 import com.ufide.ProyectLenguajesBD.repository.DetalleMedicamentoRepository;
+import com.ufide.ProyectLenguajesBD.repository.MedicamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
-import com.ufide.ProyectLenguajesBD.entity.DetalleMedicamento;
 
 @Service
+@Transactional
 public class MedicamentoService {
-    
+
     @Autowired
     private MedicamentoRepository medicamentoRepository;
 
@@ -35,13 +37,25 @@ public class MedicamentoService {
         return medicamentoRepository.save(medicamento);
     }
 
-    @Transactional
+    public Medicamento actualizar(Integer id, Medicamento medicamentoActualizado) {
+        return medicamentoRepository.findById(id)
+                .map(medicamento -> {
+                    medicamento.setNombre(medicamentoActualizado.getNombre());
+                    return medicamentoRepository.save(medicamento);
+                })
+                .orElseThrow(() -> new RuntimeException("Medicamento no encontrado con id: " + id));
+    }
+
     public void eliminar(Integer id) {
-        detalleMedicamentoRepository.deleteAll(detalleMedicamentoRepository.findByMedicamentoPkMedicamento(id));
+        // Eliminar primero los detalles asociados (cascada manual)
+        List<DetalleMedicamento> detalles = detalleMedicamentoRepository.findByMedicamentoPkMedicamento(id);
+        for (DetalleMedicamento detalle : detalles) {
+            detalleMedicamentoRepository.deleteById(detalle.getPkDetalleMedicamento());
+        }
         medicamentoRepository.deleteById(id);
     }
 
-    @Transactional
+    // Método que guarda medicamento junto con su detalle
     public Medicamento guardarConDetalle(Medicamento medicamento, DetalleMedicamento detalle) {
         Medicamento guardado = medicamentoRepository.save(medicamento);
         detalle.setMedicamento(guardado);
@@ -49,9 +63,9 @@ public class MedicamentoService {
         return guardado;
     }
 
-    @Transactional
+    // Método que actualiza medicamento y su detalle (suponiendo un solo detalle por medicamento)
     public Optional<Medicamento> actualizarConDetalle(Integer id, Medicamento medicamentoActualizado,
-            DetalleMedicamento detalleActualizado) {
+                                                      DetalleMedicamento detalleActualizado) {
         return medicamentoRepository.findById(id).map(medicamento -> {
             medicamento.setNombre(medicamentoActualizado.getNombre());
             medicamentoRepository.save(medicamento);
@@ -68,14 +82,5 @@ public class MedicamentoService {
             detalleMedicamentoRepository.save(detalle);
             return medicamento;
         });
-    }
-
-    public Medicamento actualizar(Integer id, Medicamento medicamentoActualizado) {
-        return medicamentoRepository.findById(id)
-                .map(medicamento -> {
-                    medicamento.setNombre(medicamentoActualizado.getNombre());
-                    return medicamentoRepository.save(medicamento);
-                })
-                .orElse(null);
     }
 }

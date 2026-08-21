@@ -1,39 +1,17 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "EXPEDIENTE")
 public class Expediente {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_EXPEDIENTE")
+
     private Integer pkExpediente;
-
-    @OneToOne
-    @JoinColumn(name = "FK_PACIENTE", nullable = false, unique = true, foreignKey = @ForeignKey(name = "FK_EXPEDIENTE_PACIENTE"))
     private Paciente paciente;
-
-    @Column(name = "FECHA_CREACION", nullable = false)
     private LocalDate fechaCreacion;
-
-    @OneToMany(mappedBy = "expediente")
     private List<Consulta> consultas;
 
-    // Constructores
-    public Expediente() {}
+    public Expediente() {
+    }
 
     public Expediente(Paciente paciente, LocalDate fechaCreacion) {
         this.paciente = paciente;

@@ -1,60 +1,25 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "CONSULTA")
 public class Consulta {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_CONSULTA")
+
     private Integer pkConsulta;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_EXPEDIENTE", nullable = false, foreignKey = @ForeignKey(name = "FK_CONSULTA_EXPEDIENTE"))
     private Expediente expediente;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_PERSONAL_MEDICO", nullable = false, foreignKey = @ForeignKey(name = "FK_CONSULTA_PERSONAL"))
     private PersonalMedico personalMedico;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_DIAGNOSTICO", nullable = true, foreignKey = @ForeignKey(name = "FK_CONSULTA_DIAGNOSTICO"))
     private Diagnostico diagnostico;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_CITA", nullable = true, foreignKey = @ForeignKey(name = "FK_CONSULTA_CITA"))
     private Cita cita;
-
-    @Column(name = "FECHA_CONSULTA", nullable = false)
     private LocalDate fechaConsulta;
-
-    @Column(name = "MOTIVO", nullable = true, length = 200)
     private String motivo;
-
-    @Column(name = "OBSERVACIONES", nullable = true, length = 200)
     private String observaciones;
-
-    @OneToMany(mappedBy = "consulta")
     private List<Receta> recetas;
 
-    // Constructores
-    public Consulta() {}
+    public Consulta() {
+    }
 
     public Consulta(Expediente expediente, PersonalMedico personalMedico, Diagnostico diagnostico,
-                   Cita cita, LocalDate fechaConsulta, String motivo, String observaciones) {
+                    Cita cita, LocalDate fechaConsulta, String motivo, String observaciones) {
         this.expediente = expediente;
         this.personalMedico = personalMedico;
         this.diagnostico = diagnostico;

@@ -1,37 +1,17 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.List;
 
-@Entity
-@Table(name = "CONSULTORIO")
 public class Consultorio {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_CONSULTORIO")
+
     private Integer pkConsultorio;
-
-    @Column(name = "NUMERO_CONSULTORIO", nullable = false, length = 10)
     private String numeroConsultorio;
-
-    @Column(name = "LOCALIDAD", nullable = true, length = 50)
     private String localidad;
-
-    @Column(name = "PROVINCIA", nullable = true, length = 50)
     private String provincia;
-
-    @OneToMany(mappedBy = "consultorio")
     private List<Cita> citas;
 
-    // Constructores
-    public Consultorio() {}
+    public Consultorio() {
+    }
 
     public Consultorio(String numeroConsultorio, String localidad, String provincia) {
         this.numeroConsultorio = numeroConsultorio;

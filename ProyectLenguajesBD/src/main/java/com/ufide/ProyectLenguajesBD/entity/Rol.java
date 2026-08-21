@@ -1,31 +1,17 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "ROL")
 public class Rol {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_ROL")
     private Integer pkRol;
-
-    @Column(name = "NOMBRE_ROL", nullable = false, unique = true, length = 50)
     private String nombreRol;
-
-    @Column(name = "DESCRIPCION", length = 200)
     private String descripcion;
-
-    @OneToMany(mappedBy = "rol")
     private List<Usuario> usuarios;
 
-    // Constructor vacío (necesario para JPA)
     public Rol() {
     }
 
-    // Constructor con parámetros
     public Rol(String nombreRol, String descripcion) {
         this.nombreRol = nombreRol;
         this.descripcion = descripcion;

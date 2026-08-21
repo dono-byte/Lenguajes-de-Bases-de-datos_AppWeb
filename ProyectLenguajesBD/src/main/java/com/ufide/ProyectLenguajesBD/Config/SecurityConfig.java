@@ -30,13 +30,15 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/login").permitAll()
                 .requestMatchers("/api/**").authenticated()
-                .requestMatchers("/medicos/**", "/pacientes/**", "/citas/**", "/consultas/**", "/medicamentos/**", "/expediente/**").authenticated()
+                .requestMatchers("/medicos/**", "/pacientes/**", "/citas/**", "/consultas/**",
+                                 "/medicamentos/**", "/expediente/**").authenticated()
+                .requestMatchers("/api/reportes/**").authenticated()  // nuevo
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/", true)   // Cambiado a "/" en lugar de "/index"
+                .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
@@ -46,11 +48,12 @@ public class SecurityConfig {
                 .permitAll()
             )
             .userDetailsService(userDetailsService)
-            .csrf(csrf -> csrf.disable()); // Si quieres habilitar CSRF, elimina esta línea
+            .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
-        @Bean
+
+    @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override

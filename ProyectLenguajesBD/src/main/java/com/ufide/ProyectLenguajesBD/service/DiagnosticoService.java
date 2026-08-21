@@ -4,12 +4,15 @@ import com.ufide.ProyectLenguajesBD.entity.Diagnostico;
 import com.ufide.ProyectLenguajesBD.repository.DiagnosticoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class DiagnosticoService {
-    
+
     @Autowired
     private DiagnosticoRepository diagnosticoRepository;
 
@@ -29,16 +32,17 @@ public class DiagnosticoService {
         return diagnosticoRepository.save(diagnostico);
     }
 
-    public void eliminar(Integer id) {
-        diagnosticoRepository.deleteById(id);
-    }
-
     public Diagnostico actualizar(Integer id, Diagnostico diagnosticoActualizado) {
         return diagnosticoRepository.findById(id)
                 .map(diagnostico -> {
+                    diagnostico.setCodigoCie10(diagnosticoActualizado.getCodigoCie10());
                     diagnostico.setDescripcion(diagnosticoActualizado.getDescripcion());
                     return diagnosticoRepository.save(diagnostico);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Diagnóstico no encontrado con id: " + id));
+    }
+
+    public void eliminar(Integer id) {
+        diagnosticoRepository.deleteById(id);
     }
 }

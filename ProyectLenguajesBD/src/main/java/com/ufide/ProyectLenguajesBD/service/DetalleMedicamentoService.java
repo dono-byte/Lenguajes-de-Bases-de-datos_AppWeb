@@ -4,12 +4,15 @@ import com.ufide.ProyectLenguajesBD.entity.DetalleMedicamento;
 import com.ufide.ProyectLenguajesBD.repository.DetalleMedicamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class DetalleMedicamentoService {
-    
+
     @Autowired
     private DetalleMedicamentoRepository detalleMedicamentoRepository;
 
@@ -29,13 +32,10 @@ public class DetalleMedicamentoService {
         return detalleMedicamentoRepository.save(detalleMedicamento);
     }
 
-    public void eliminar(Integer id) {
-        detalleMedicamentoRepository.deleteById(id);
-    }
-
     public DetalleMedicamento actualizar(Integer id, DetalleMedicamento detalleActualizado) {
         return detalleMedicamentoRepository.findById(id)
                 .map(detalle -> {
+                    detalle.setMedicamento(detalleActualizado.getMedicamento());
                     detalle.setPresentacion(detalleActualizado.getPresentacion());
                     detalle.setConcentracion(detalleActualizado.getConcentracion());
                     detalle.setEntradas(detalleActualizado.getEntradas());
@@ -44,6 +44,10 @@ public class DetalleMedicamentoService {
                     detalle.setVencimientos(detalleActualizado.getVencimientos());
                     return detalleMedicamentoRepository.save(detalle);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Detalle de medicamento no encontrado con id: " + id));
+    }
+
+    public void eliminar(Integer id) {
+        detalleMedicamentoRepository.deleteById(id);
     }
 }

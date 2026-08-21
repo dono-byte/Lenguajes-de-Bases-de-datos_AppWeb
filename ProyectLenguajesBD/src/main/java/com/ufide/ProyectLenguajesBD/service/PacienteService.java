@@ -4,12 +4,15 @@ import com.ufide.ProyectLenguajesBD.entity.Paciente;
 import com.ufide.ProyectLenguajesBD.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PacienteService {
-    
+
     @Autowired
     private PacienteRepository pacienteRepository;
 
@@ -29,13 +32,10 @@ public class PacienteService {
         return pacienteRepository.save(paciente);
     }
 
-    public void eliminar(Integer id) {
-        pacienteRepository.deleteById(id);
-    }
-
     public Paciente actualizar(Integer id, Paciente pacienteActualizado) {
         return pacienteRepository.findById(id)
                 .map(paciente -> {
+                    paciente.setCedula(pacienteActualizado.getCedula());
                     paciente.setNombre(pacienteActualizado.getNombre());
                     paciente.setFechaNacimiento(pacienteActualizado.getFechaNacimiento());
                     paciente.setGenero(pacienteActualizado.getGenero());
@@ -43,6 +43,10 @@ public class PacienteService {
                     paciente.setDireccion(pacienteActualizado.getDireccion());
                     return pacienteRepository.save(paciente);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado con id: " + id));
+    }
+
+    public void eliminar(Integer id) {
+        pacienteRepository.deleteById(id);
     }
 }

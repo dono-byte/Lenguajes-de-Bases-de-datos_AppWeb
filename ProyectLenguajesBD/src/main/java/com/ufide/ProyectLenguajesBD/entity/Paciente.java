@@ -1,53 +1,25 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "PACIENTE")
 public class Paciente {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_PACIENTE")
+
     private Integer pkPaciente;
-
-    @Column(name = "CEDULA", nullable = false, unique = true, length = 20)
     private String cedula;
-
-    @Column(name = "NOMBRE", nullable = false, length = 100)
     private String nombre;
-
-    @Column(name = "FECHA_NACIMIENTO", nullable = false)
     private LocalDate fechaNacimiento;
-
-    @Column(name = "GENERO", nullable = false, length = 20)
     private String genero;
-
-    @Column(name = "TELEFONO", nullable = true, length = 20)
     private String telefono;
-
-    @Column(name = "DIRECCION", nullable = true, length = 255)
     private String direccion;
-
-    @OneToMany(mappedBy = "paciente")
     private List<Cita> citas;
-
-    @OneToOne(mappedBy = "paciente")
     private Expediente expediente;
 
-    // Constructores
-    public Paciente() {}
+    public Paciente() {
+    }
 
-    public Paciente(String cedula, String nombre, LocalDate fechaNacimiento, String genero, String telefono, String direccion) {
+    public Paciente(String cedula, String nombre, LocalDate fechaNacimiento, String genero,
+                    String telefono, String direccion) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;

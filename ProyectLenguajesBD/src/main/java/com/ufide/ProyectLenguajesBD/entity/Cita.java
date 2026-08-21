@@ -1,51 +1,23 @@
 package com.ufide.ProyectLenguajesBD.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "CITA")
 public class Cita {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_CITA")
+
     private Integer pkCita;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_PACIENTE", nullable = false, foreignKey = @ForeignKey(name = "FK_CITA_PACIENTE"))
     private Paciente paciente;
-
-    @ManyToOne
-    @JoinColumn(name = "FK_CONSULTORIO", nullable = false, foreignKey = @ForeignKey(name = "FK_CITA_CONSULTORIO"))
     private Consultorio consultorio;
-
-    @Column(name = "FECHA_HORA", nullable = false)
     private LocalDateTime fechaHora;
-
-    @Column(name = "DURACION", nullable = true, length = 20)
     private String duracion;
-
-    @Column(name = "ESTADO", nullable = false, length = 20)
     private String estado;
-
-    @OneToMany(mappedBy = "cita")
     private List<Consulta> consultas;
 
-    // Constructores
-    public Cita() {}
+    public Cita() {
+    }
 
-    public Cita(Paciente paciente, Consultorio consultorio, LocalDateTime fechaHora, String duracion, String estado) {
+    public Cita(Paciente paciente, Consultorio consultorio, LocalDateTime fechaHora,
+                String duracion, String estado) {
         this.paciente = paciente;
         this.consultorio = consultorio;
         this.fechaHora = fechaHora;
