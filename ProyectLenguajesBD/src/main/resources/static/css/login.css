@@ -1,7 +1,11 @@
 
 body {
     min-height: 100vh;
-    background: linear-gradient(135deg, #e8f4ff, #ffffff);
+    padding: 24px;
+    background:
+        radial-gradient(circle at 12% 15%, rgba(59, 181, 233, .22), transparent 25rem),
+        radial-gradient(circle at 92% 84%, rgba(13, 73, 131, .18), transparent 28rem),
+        linear-gradient(135deg, #e9f5fc, #f9fcff 55%, #eaf2fb);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,28 +22,31 @@ body {
 .login-card {
     background: white;
     width: 420px;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.12);
+    padding: 42px;
+    border: 1px solid rgba(210, 224, 237, .9);
+    border-radius: 24px;
+    box-shadow: 0px 22px 55px rgba(25, 68, 107, .16);
 }
 
 .logo-icon {
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0d6efd;
+    background: linear-gradient(135deg, #35b6e8, #126ebd);
     color: white;
-    border-radius: 50%;
-    font-size: 40px;
+    border-radius: 22px;
+    box-shadow: 0 10px 22px rgba(18, 110, 189, .25);
+    font-size: 34px;
 }
 
 .clinic-title {
     margin-top: 15px;
-    font-weight: 700;
-    color: #0d6efd;
+    font-weight: 800;
+    letter-spacing: -.04em;
+    color: #12345b;
 }
 
 .input-group-text {
@@ -48,8 +55,9 @@ body {
 }
 
 .form-control {
-    padding: 12px;
+    padding: 12px 14px;
     border-radius: 10px;
+    border-color: #d7e2ed;
 }
 
 .form-control:focus {
@@ -58,16 +66,16 @@ body {
 }
 
 .btn-login {
-    background: #0d6efd;
+    background: #1778c8;
     color: white;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 17px;
     font-weight: 600;
 }
 
 .btn-login:hover {
-    background: #084298;
+    background: #115f9f;
     color: white;
 }
 
@@ -78,4 +86,9 @@ body {
 
 .forgot-password:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    body { padding: 16px; }
+    .login-card { padding: 30px 24px; }
 }
