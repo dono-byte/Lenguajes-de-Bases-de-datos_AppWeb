@@ -167,7 +167,10 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label>Médico</label>
-                            <input id="medico" class="form-control">
+                            <select id="medico" class="form-select">
+                                <option value="">Seleccione un médico</option>
+                                <option th:each="medico : ${medicos}" th:value="${medico.pkPersonalMedico}" th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
+                            </select>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Consultorio</label>

@@ -29,11 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('guardarCita').addEventListener('click', async () => {
         const fecha = document.getElementById('fecha').value;
         const hora = document.getElementById('hora').value;
+        const medicoId = Number(document.getElementById('medico').value);
         const datos = {pacienteId: Number(document.getElementById('paciente').value),
-            consultorioId: Number(document.getElementById('consultorio').value), fechaHora: `${fecha}T${hora}`,
+            consultorioId: Number(document.getElementById('consultorio').value), medicoId,
+            fechaHora: `${fecha}T${hora}`,
             duracion: document.getElementById('duracion').value, estado: document.getElementById('estado').value};
-        if (!datos.pacienteId || !datos.consultorioId || !fecha || !hora) {
-            alert('Complete los campos obligatorios');
+        if (!datos.pacienteId || !datos.consultorioId || !medicoId || !fecha || !hora) {
+            alert('Complete los campos obligatorios, incluyendo el médico');
             return;
         }
         await fetch('/api/citas', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)});

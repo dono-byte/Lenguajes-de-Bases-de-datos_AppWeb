@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.ufide.ProyectLenguajesBD.service.CitaService;
+import com.ufide.ProyectLenguajesBD.service.PersonalMedicoService;
 import com.ufide.ProyectLenguajesBD.entity.Cita;
 import com.ufide.ProyectLenguajesBD.entity.Consultorio;
 import com.ufide.ProyectLenguajesBD.entity.Paciente;
@@ -32,11 +33,15 @@ public class CitasController {
     @Autowired
     private ConsultorioRepository consultorioRepository;
 
+    @Autowired
+    private PersonalMedicoService personalMedicoService;
+
     @GetMapping({"/citas", "/citas.html"})
     public String verCitas(Model model) {
         model.addAttribute("citas", citaService.obtenerTodos());
         model.addAttribute("pacientes", pacienteRepository.findAll());
         model.addAttribute("consultorios", consultorioRepository.findAll());
+        model.addAttribute("medicos", personalMedicoService.obtenerTodos());
         return "citas";
     }
 
