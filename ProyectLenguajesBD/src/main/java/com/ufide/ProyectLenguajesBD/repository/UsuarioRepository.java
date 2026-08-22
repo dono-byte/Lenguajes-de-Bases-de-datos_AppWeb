@@ -76,6 +76,7 @@ public class UsuarioRepository {
     }
 
     private static class UsuarioRowMapper implements RowMapper<Usuario> {
+
         @Override
         public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
             Usuario u = new Usuario();
@@ -138,10 +139,29 @@ public class UsuarioRepository {
     }
 
     public Optional<Usuario> findByUsuario(String username) {
-        MapSqlParameterSource params = new MapSqlParameterSource("p_usuario", username);
-        Map<String, Object> result = getUsuarioPorNombreCall.execute(params);
-        @SuppressWarnings("unchecked")
-        List<Usuario> list = (List<Usuario>) result.get("p_cursor");
+        String sql = "SELECT u.PK_USUARIO, u.USUARIO, u.CONTRASENA, u.ESTADO, u.FK_ROL, "
+                + "r.NOMBRE_ROL, r.DESCRIPCION "
+                + "FROM USUARIO u LEFT JOIN ROL r ON u.FK_ROL = r.PK_ROL "
+                + "WHERE u.USUARIO = ?";
+        List<Usuario> list = jdbcTemplate.query(sql, new Object[]{username}, new RowMapper<Usuario>() {
+            @Override
+            public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Usuario u = new Usuario();
+                u.setPkUsuario(rs.getInt("PK_USUARIO"));
+                u.setUsuario(rs.getString("USUARIO"));
+                u.setContrasena(rs.getString("CONTRASENA"));
+                u.setEstado(rs.getString("ESTADO"));
+                int rolId = rs.getInt("FK_ROL");
+                if (rolId > 0) {
+                    Rol rol = new Rol();
+                    rol.setPkRol(rolId);
+                    rol.setNombreRol(rs.getString("NOMBRE_ROL"));
+                    rol.setDescripcion(rs.getString("DESCRIPCION"));
+                    u.setRol(rol);
+                }
+                return u;
+            }
+        });
         return list.stream().findFirst();
     }
 }
