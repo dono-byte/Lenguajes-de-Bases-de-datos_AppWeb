@@ -110,9 +110,12 @@
                                         <td th:text="${cita.consultorio.provincia}">Provincia</td>
                                         <td th:text="${cita.estado}">Estado</td>
                                         <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"><i class="bi bi-eye"></i></button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i class="bi bi-pencil"></i></button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button>
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"><i
+                                                    class="bi bi-eye"></i></button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i
+                                                    class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i
+                                                    class="bi bi-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -159,7 +162,8 @@
                             <label>Paciente</label>
                             <select id="paciente" class="form-select">
                                 <option value="">Seleccione un paciente</option>
-                                <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
+                                <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}"
+                                    th:text="${paciente.nombre}">Paciente</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -174,14 +178,16 @@
                             <label>Médico</label>
                             <select id="medico" class="form-select">
                                 <option value="">Seleccione un médico</option>
-                                <option th:each="medico : ${medicos}" th:value="${medico.pkPersonalMedico}" th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
+                                <option th:each="medico : ${medicos}" th:value="${medico.pkPersonalMedico}"
+                                    th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Consultorio</label>
                             <select id="consultorio" class="form-select">
                                 <option value="">Seleccione un consultorio</option>
-                                <option th:each="consultorio : ${consultorios}" th:value="${consultorio.pkConsultorio}" th:text="${consultorio.numeroConsultorio}">Consultorio</option>
+                                <option th:each="consultorio : ${consultorios}" th:value="${consultorio.pkConsultorio}"
+                                    th:text="${consultorio.numeroConsultorio}">Consultorio</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -239,7 +245,8 @@
                 <div class="modal-body">
                     <label>Paciente</label>
                     <select id="editarPaciente" class="form-select mb-3">
-                        <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
+                        <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}"
+                            th:text="${paciente.nombre}">Paciente</option>
                     </select>
                     <label>Fecha</label>
                     <input id="editarFecha" type="date" class="form-control mb-3">
@@ -247,7 +254,8 @@
                     <input id="editarHora" type="time" class="form-control mb-3">
                     <label>Consultorio</label>
                     <select id="editarConsultorio" class="form-select mb-3">
-                        <option th:each="consultorio : ${consultorios}" th:value="${consultorio.pkConsultorio}" th:text="${consultorio.numeroConsultorio}">Consultorio</option>
+                        <option th:each="consultorio : ${consultorios}" th:value="${consultorio.pkConsultorio}"
+                            th:text="${consultorio.numeroConsultorio}">Consultorio</option>
                     </select>
                     <label>Duración (min)</label>
                     <input id="editarDuracion" class="form-control mb-3">

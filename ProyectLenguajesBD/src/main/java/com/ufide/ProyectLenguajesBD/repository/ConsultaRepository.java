@@ -141,9 +141,14 @@ public class ConsultaRepository {
     }
 
     public List<Consulta> findAll() {
-        String sql = "SELECT * FROM CONSULTA";
-        return jdbcTemplate.query(sql, rowMapper);
-    }
+    String sql = "SELECT c.*, p.NOMBRE AS PACIENTE_NOMBRE, pm.NOMBRE AS MEDICO_NOMBRE, pm.APELLIDO AS MEDICO_APELLIDO, d.DESCRIPCION AS DIAGNOSTICO_DESCRIPCION " +
+                 "FROM CONSULTA c " +
+                 "JOIN EXPEDIENTE e ON c.FK_EXPEDIENTE = e.PK_EXPEDIENTE " +
+                 "JOIN PACIENTE p ON e.FK_PACIENTE = p.PK_PACIENTE " +
+                 "JOIN PERSONAL_MEDICO pm ON c.FK_PERSONAL_MEDICO = pm.PK_PERSONAL_MEDICO " +
+                 "LEFT JOIN DIAGNOSTICO d ON c.FK_DIAGNOSTICO = d.PK_DIAGNOSTICO";
+    return jdbcTemplate.query(sql, rowMapper);
+}
 
     public Consulta save(Consulta consulta) {
         if (consulta.getPkConsulta() == null) {
