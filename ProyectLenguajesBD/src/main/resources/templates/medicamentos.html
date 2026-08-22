@@ -123,9 +123,10 @@
                         <label class="form-label">Consulta</label>
                         <select id="consultaAsignacion" class="form-select">
                             <option value="">Seleccione una consulta</option>
+                            <!-- CORREGIDO: verifica expediente y paciente para evitar error de null -->
                             <option th:each="consulta : ${consultas}" th:value="${consulta.pkConsulta}"
-                                th:data-paciente-id="${consulta.expediente.paciente.pkPaciente}"
-                                th:text="${consulta.fechaConsulta + ' - ' + consulta.expediente.paciente.nombre + ' - ' + consulta.motivo}">Consulta</option>
+                                th:attr="data-paciente-id=${consulta.expediente != null && consulta.expediente.paciente != null ? consulta.expediente.paciente.pkPaciente : ''}"
+                                th:text="${consulta.fechaConsulta + ' - ' + (consulta.expediente != null && consulta.expediente.paciente != null ? consulta.expediente.paciente.nombre : 'Sin paciente') + ' - ' + consulta.motivo}">Consulta</option>
                         </select>
                     </div>
                     <div class="mb-3">
