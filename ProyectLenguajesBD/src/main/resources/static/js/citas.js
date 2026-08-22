@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cargarCitas();
 
+    
     // ========== FILTRO COMBINADO ==========
     function filtrarCitas() {
         const texto = buscarInput.value.toLowerCase();
