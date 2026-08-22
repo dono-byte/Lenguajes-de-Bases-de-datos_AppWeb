@@ -1,56 +1,38 @@
 package com.ufide.ProyectLenguajesBD.repository;
 
-import com.ufide.ProyectLenguajesBD.entity.Cita;
-import com.ufide.ProyectLenguajesBD.entity.Paciente;
-import com.ufide.ProyectLenguajesBD.entity.Consultorio;
-import oracle.jdbc.OracleTypes;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import oracle.jdbc.OracleTypes;
+import org.springframework.stereotype.Repository;
+
+import com.ufide.ProyectLenguajesBD.entity.Cita;
+import com.ufide.ProyectLenguajesBD.entity.Consultorio;
+import com.ufide.ProyectLenguajesBD.entity.Paciente;
+
 @Repository
 public class CitaRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcCall getCitaCall;
     private final SimpleJdbcCall insCitaCall;
     private final SimpleJdbcCall updCitaCall;
     private final SimpleJdbcCall delCitaCall;
-    private final SimpleJdbcCall getCitasPorPacienteCall;
-    private final SimpleJdbcCall getCitasPorRangoCall;
     private final CitaRowMapper rowMapper;
 
     public CitaRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = new CitaRowMapper();
 
-        this.getCitaCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("PKG_CRUD_SISTEMA")
-                .withProcedureName("GET_CITA")
-                .declareParameters(
-                        new SqlParameter("p_id", Types.INTEGER),
-                        new SqlOutParameter("p_result", OracleTypes.CURSOR, rowMapper)
-                );
-
+        // Procedimientos para escritura (INSERT, UPDATE, DELETE) se mantienen
         this.insCitaCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("PKG_CRUD_SISTEMA")
                 .withProcedureName("INS_CITA")
@@ -80,23 +62,9 @@ public class CitaRepository {
                 .declareParameters(
                         new SqlParameter("p_id", Types.INTEGER)
                 );
-
-        this.getCitasPorPacienteCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("GET_CITAS_POR_PACIENTE")
-                .declareParameters(
-                        new SqlParameter("p_paciente_id", Types.INTEGER),
-                        new SqlOutParameter("p_cursor", OracleTypes.CURSOR, rowMapper)
-                );
-
-        this.getCitasPorRangoCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("GET_CITAS_POR_RANGO")
-                .declareParameters(
-                        new SqlParameter("p_fecha_inicio", Types.DATE),
-                        new SqlParameter("p_fecha_fin", Types.DATE),
-                        new SqlOutParameter("p_cursor", OracleTypes.CURSOR, rowMapper)
-                );
     }
 
+    // RowMapper que mapea todas las columnas incluyendo las de PACIENTE y CONSULTORIO
     private static class CitaRowMapper implements RowMapper<Cita> {
         @Override
         public Cita mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -106,45 +74,99 @@ public class CitaRepository {
             c.setDuracion(rs.getString("DURACION"));
             c.setEstado(rs.getString("ESTADO"));
 
-            int pacienteId = rs.getInt("FK_PACIENTE");
-            if (pacienteId > 0) {
-                Paciente p = new Paciente();
-                p.setPkPaciente(pacienteId);
-                c.setPaciente(p);
-            }
-            int consultorioId = rs.getInt("FK_CONSULTORIO");
-            if (consultorioId > 0) {
-                Consultorio con = new Consultorio();
-                con.setPkConsultorio(consultorioId);
-                c.setConsultorio(con);
-            }
+            // Paciente
+            Paciente p = new Paciente();
+            p.setPkPaciente(rs.getInt("FK_PACIENTE"));
+            p.setNombre(rs.getString("paciente_nombre"));
+            p.setCedula(rs.getString("paciente_cedula"));
+            p.setFechaNacimiento(rs.getDate("paciente_fecha_nac").toLocalDate());
+            p.setGenero(rs.getString("paciente_genero"));
+            p.setTelefono(rs.getString("paciente_telefono"));
+            p.setDireccion(rs.getString("paciente_direccion"));
+            c.setPaciente(p);
+
+            // Consultorio
+            Consultorio con = new Consultorio();
+            con.setPkConsultorio(rs.getInt("FK_CONSULTORIO"));
+            con.setNumeroConsultorio(rs.getString("consultorio_numero"));
+            con.setLocalidad(rs.getString("consultorio_localidad"));
+            con.setProvincia(rs.getString("consultorio_provincia"));
+            c.setConsultorio(con);
+
             return c;
         }
     }
 
+    // ============ MÉTODOS DE LECTURA (con JOIN) ============
+
     public Optional<Cita> findById(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource("p_id", id);
-        Map<String, Object> result = getCitaCall.execute(params);
-        @SuppressWarnings("unchecked")
-        List<Cita> list = (List<Cita>) result.get("p_result");
-        return list.stream().findFirst();
+        String sql = "SELECT c.*, " +
+                     "p.NOMBRE as paciente_nombre, p.CEDULA as paciente_cedula, " +
+                     "p.FECHA_NACIMIENTO as paciente_fecha_nac, p.GENERO as paciente_genero, " +
+                     "p.TELEFONO as paciente_telefono, p.DIRECCION as paciente_direccion, " +
+                     "con.NUMERO_CONSULTORIO as consultorio_numero, " +
+                     "con.LOCALIDAD as consultorio_localidad, con.PROVINCIA as consultorio_provincia " +
+                     "FROM CITA c " +
+                     "JOIN PACIENTE p ON c.FK_PACIENTE = p.PK_PACIENTE " +
+                     "JOIN CONSULTORIO con ON c.FK_CONSULTORIO = con.PK_CONSULTORIO " +
+                     "WHERE c.PK_CITA = ?";
+        List<Cita> result = jdbcTemplate.query(sql, new Object[]{id}, rowMapper);
+        return result.stream().findFirst();
     }
 
     public List<Cita> findAll() {
-        String sql = "SELECT * FROM CITA";
+        String sql = "SELECT c.*, " +
+                     "p.NOMBRE as paciente_nombre, p.CEDULA as paciente_cedula, " +
+                     "p.FECHA_NACIMIENTO as paciente_fecha_nac, p.GENERO as paciente_genero, " +
+                     "p.TELEFONO as paciente_telefono, p.DIRECCION as paciente_direccion, " +
+                     "con.NUMERO_CONSULTORIO as consultorio_numero, " +
+                     "con.LOCALIDAD as consultorio_localidad, con.PROVINCIA as consultorio_provincia " +
+                     "FROM CITA c " +
+                     "JOIN PACIENTE p ON c.FK_PACIENTE = p.PK_PACIENTE " +
+                     "JOIN CONSULTORIO con ON c.FK_CONSULTORIO = con.PK_CONSULTORIO";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public List<Cita> findByPacientePkPaciente(Integer pacienteId) {
+        String sql = "SELECT c.*, " +
+                     "p.NOMBRE as paciente_nombre, p.CEDULA as paciente_cedula, " +
+                     "p.FECHA_NACIMIENTO as paciente_fecha_nac, p.GENERO as paciente_genero, " +
+                     "p.TELEFONO as paciente_telefono, p.DIRECCION as paciente_direccion, " +
+                     "con.NUMERO_CONSULTORIO as consultorio_numero, " +
+                     "con.LOCALIDAD as consultorio_localidad, con.PROVINCIA as consultorio_provincia " +
+                     "FROM CITA c " +
+                     "JOIN PACIENTE p ON c.FK_PACIENTE = p.PK_PACIENTE " +
+                     "JOIN CONSULTORIO con ON c.FK_CONSULTORIO = con.PK_CONSULTORIO " +
+                     "WHERE c.FK_PACIENTE = ?";
+        return jdbcTemplate.query(sql, new Object[]{pacienteId}, rowMapper);
+    }
+
+    public List<Cita> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin) {
+        String sql = "SELECT c.*, " +
+                     "p.NOMBRE as paciente_nombre, p.CEDULA as paciente_cedula, " +
+                     "p.FECHA_NACIMIENTO as paciente_fecha_nac, p.GENERO as paciente_genero, " +
+                     "p.TELEFONO as paciente_telefono, p.DIRECCION as paciente_direccion, " +
+                     "con.NUMERO_CONSULTORIO as consultorio_numero, " +
+                     "con.LOCALIDAD as consultorio_localidad, con.PROVINCIA as consultorio_provincia " +
+                     "FROM CITA c " +
+                     "JOIN PACIENTE p ON c.FK_PACIENTE = p.PK_PACIENTE " +
+                     "JOIN CONSULTORIO con ON c.FK_CONSULTORIO = con.PK_CONSULTORIO " +
+                     "WHERE c.FECHA_HORA BETWEEN ? AND ?";
+        return jdbcTemplate.query(sql, new Object[]{Timestamp.valueOf(inicio), Timestamp.valueOf(fin)}, rowMapper);
+    }
+
+    // ============ MÉTODOS DE ESCRITURA (procedimientos) ============
 
     public Cita save(Cita cita) {
         if (cita.getPkCita() == null) {
             MapSqlParameterSource params = new MapSqlParameterSource()
-                    .addValue("p_fk_paciente", cita.getPaciente() != null ? cita.getPaciente().getPkPaciente() : null)
-                    .addValue("p_fk_consultorio", cita.getConsultorio() != null ? cita.getConsultorio().getPkConsultorio() : null)
+                    .addValue("p_fk_paciente", cita.getPaciente().getPkPaciente())
+                    .addValue("p_fk_consultorio", cita.getConsultorio().getPkConsultorio())
                     .addValue("p_fecha_hora", cita.getFechaHora())
                     .addValue("p_duracion", cita.getDuracion())
                     .addValue("p_estado", cita.getEstado());
             insCitaCall.execute(params);
-            // Recuperar ID por paciente y fecha
+            // Recuperar el ID generado
             String sql = "SELECT PK_CITA FROM CITA WHERE FK_PACIENTE = ? AND FECHA_HORA = ?";
             List<Integer> ids = jdbcTemplate.queryForList(sql, Integer.class,
                     cita.getPaciente().getPkPaciente(),
@@ -156,8 +178,8 @@ public class CitaRepository {
         } else {
             MapSqlParameterSource params = new MapSqlParameterSource()
                     .addValue("p_id", cita.getPkCita())
-                    .addValue("p_fk_paciente", cita.getPaciente() != null ? cita.getPaciente().getPkPaciente() : null)
-                    .addValue("p_fk_consultorio", cita.getConsultorio() != null ? cita.getConsultorio().getPkConsultorio() : null)
+                    .addValue("p_fk_paciente", cita.getPaciente().getPkPaciente())
+                    .addValue("p_fk_consultorio", cita.getConsultorio().getPkConsultorio())
                     .addValue("p_fecha_hora", cita.getFechaHora())
                     .addValue("p_duracion", cita.getDuracion())
                     .addValue("p_estado", cita.getEstado());
@@ -169,23 +191,5 @@ public class CitaRepository {
     public void deleteById(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource("p_id", id);
         delCitaCall.execute(params);
-    }
-
-    public List<Cita> findByPacientePkPaciente(Integer pacienteId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("p_paciente_id", pacienteId);
-        Map<String, Object> result = getCitasPorPacienteCall.execute(params);
-        @SuppressWarnings("unchecked")
-        List<Cita> list = (List<Cita>) result.get("p_cursor");
-        return list;
-    }
-
-    public List<Cita> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("p_fecha_inicio", Timestamp.valueOf(inicio))
-                .addValue("p_fecha_fin", Timestamp.valueOf(fin));
-        Map<String, Object> result = getCitasPorRangoCall.execute(params);
-        @SuppressWarnings("unchecked")
-        List<Cita> list = (List<Cita>) result.get("p_cursor");
-        return list;
     }
 }
