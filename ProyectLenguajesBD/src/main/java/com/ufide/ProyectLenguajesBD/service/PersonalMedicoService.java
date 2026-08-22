@@ -17,8 +17,8 @@ public class PersonalMedicoService {
     private PersonalMedicoRepository personalMedicoRepository;
 
     public List<PersonalMedico> obtenerTodos() {
-        return personalMedicoRepository.findAll();
-    }
+    return personalMedicoRepository.findAllWithEspecialidades();
+}
 
     public Optional<PersonalMedico> obtenerPorId(Integer id) {
         return personalMedicoRepository.findById(id);
@@ -55,4 +55,5 @@ public class PersonalMedicoService {
     public void eliminar(Integer id) {
         personalMedicoRepository.deleteById(id);
     }
+    
 }

@@ -7,11 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.text.Normalizer;  // Asegúrate de importarlo
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -58,18 +60,19 @@ public class HomeController {
 
         // Gráfico: citas por día de la semana (usando ReportesService)
         List<Map<String, Object>> citasPorDiaData = reportesService.obtenerCitasPorDiaSemana();
-        List<String> etiquetasDias = List.of("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-        List<Integer> citasPorDia = new ArrayList<>();
-        // Inicializar con ceros
-        for (int i = 0; i < 7; i++) citasPorDia.add(0);
-        // Llenar con datos del reporte (asumiendo que el procedimiento devuelve día y cantidad)
-        for (Map<String, Object> row : citasPorDiaData) {
-            String dia = row.get("DIA_SEMANA").toString().trim();
-            int index = etiquetasDias.indexOf(dia);
-            if (index >= 0) {
-                citasPorDia.set(index, ((Number) row.get("CANTIDAD")).intValue());
-            }
-        }
+List<String> etiquetasDias = List.of("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO");
+List<Integer> citasPorDia = new ArrayList<>(Collections.nCopies(7, 0));
+
+for (Map<String, Object> row : citasPorDiaData) {
+    String diaConAcento = row.get("DIA_SEMANA").toString().trim().toUpperCase();
+    // Eliminar acentos
+    String dia = Normalizer.normalize(diaConAcento, Normalizer.Form.NFD)
+                           .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    int index = etiquetasDias.indexOf(dia);
+    if (index >= 0) {
+        citasPorDia.set(index, ((Number) row.get("CANTIDAD")).intValue());
+    }
+}
         model.addAttribute("etiquetasDias", etiquetasDias);
         model.addAttribute("citasPorDia", citasPorDia);
 

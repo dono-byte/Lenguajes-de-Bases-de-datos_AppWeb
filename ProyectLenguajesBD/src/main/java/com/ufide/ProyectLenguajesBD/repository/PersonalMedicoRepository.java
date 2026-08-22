@@ -1,5 +1,7 @@
 package com.ufide.ProyectLenguajesBD.repository;
 
+import com.ufide.ProyectLenguajesBD.entity.Especialidad;
+import com.ufide.ProyectLenguajesBD.entity.MedicoEspecialidad;
 import com.ufide.ProyectLenguajesBD.entity.PersonalMedico;
 import com.ufide.ProyectLenguajesBD.entity.Usuario;
 import oracle.jdbc.OracleTypes;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -163,4 +167,37 @@ public class PersonalMedicoRepository {
         List<PersonalMedico> list = jdbcTemplate.query(sql, new Object[]{email}, rowMapper);
         return list.stream().findFirst();
     }
+ public List<PersonalMedico> findAllWithEspecialidades() {
+    String sql = 
+        "SELECT pm.*, me.PK_MEDICO_ESPECIALIDAD, me.FK_ESPECIALIDAD, e.NOMBRE AS ESPECIALIDAD_NOMBRE " +
+        "FROM PERSONAL_MEDICO pm " +
+        "LEFT JOIN MEDICO_ESPECIALIDAD me ON me.FK_PERSONAL_MEDICO = pm.PK_PERSONAL_MEDICO " +
+        "LEFT JOIN ESPECIALIDAD e ON e.PK_ESPECIALIDAD = me.FK_ESPECIALIDAD " +
+        "ORDER BY pm.PK_PERSONAL_MEDICO";
+
+    return jdbcTemplate.query(sql, rs -> {
+        Map<Integer, PersonalMedico> medicoMap = new LinkedHashMap<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("PK_PERSONAL_MEDICO");
+            PersonalMedico pm = medicoMap.get(id);
+            if (pm == null) {
+                pm = rowMapper.mapRow(rs, 0);
+                pm.setMedicoEspecialidades(new ArrayList<>());
+                medicoMap.put(id, pm);
+            }
+            // Agregar especialidad si existe
+            Integer idEsp = rs.getInt("FK_ESPECIALIDAD");
+            if (idEsp > 0 && rs.wasNull() == false) {
+                Especialidad esp = new Especialidad();
+                esp.setPkEspecialidad(idEsp);
+                esp.setNombre(rs.getString("ESPECIALIDAD_NOMBRE"));
+                MedicoEspecialidad rel = new MedicoEspecialidad();
+                rel.setPersonalMedico(pm);
+                rel.setEspecialidad(esp);
+                pm.getMedicoEspecialidades().add(rel);
+            }
+        }
+        return new ArrayList<>(medicoMap.values());
+    });
+}
 }
