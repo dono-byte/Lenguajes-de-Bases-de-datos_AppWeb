@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Star - Medicamentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/medicamentos.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-auto sidebar position-relative">
+                <div class="logo text-center">
+                    <div class="logo-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4 class="mt-2">Clinic Star</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li><a th:href="@{/}" class="nav-link"><i class="bi bi-speedometer2"></i> Inicio</a></li>
+                    <li><a th:href="@{/pacientes}" class="nav-link"><i class="bi bi-people"></i> Pacientes</a></li>
+                    <li><a th:href="@{/citas}" class="nav-link"><i class="bi bi-calendar-event"></i> Citas</a></li>
+                    <li><a th:href="@{/expediente}" class="nav-link"><i class="bi bi-folder2-open"></i> Expedientes</a></li>
+                    <li><a th:href="@{/consultas}" class="nav-link"><i class="bi bi-journal-medical"></i> Consultas</a></li>
+                    <li><a th:href="@{/medicamentos}" class="nav-link active"><i class="bi bi-capsule"></i> Medicamentos</a></li>
+                    <li><a th:href="@{/medicos}" class="nav-link"><i class="bi bi-person-badge"></i> Personal Médico</a></li>
+                </ul>
+                <div class="logout">
+                    <a th:href="@{/login}" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+                </div>
+            </div>
+
+            <!-- Contenido Principal -->
+            <div class="col contenido">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Medicamentos</h2>
+                    <button id="btnAbrirModalNuevo" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalMedicamento">
+                        <i class="bi bi-plus-circle"></i> Nuevo medicamento
+                    </button>
+                    <button id="btnAbrirModalAsignar" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#modalAsignarMedicamento">
+                        <i class="bi bi-person-plus"></i> Asignar a paciente
+                    </button>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-5">
+                                <input type="text" id="buscarMedicamento" class="form-control" placeholder="Buscar medicamento...">
+                            </div>
+                        </div>
+
+                        <!-- Detalle de medicamentos -->
+                        <h5 class="mb-3"><i class="bi bi-capsule"></i> Detalle de medicamentos</h5>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Medicamento</th>
+                                        <th>Presentación</th>
+                                        <th>Concentración</th>
+                                        <th>Entradas</th>
+                                        <th>Salidas</th>
+                                        <th>Lote</th>
+                                        <th>Vencimiento</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaMedicamentos"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Detalle de recetas -->
+                        <h5 class="mb-3"><i class="bi bi-file-earmark-medical"></i> Detalle de recetas</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Paciente</th>
+                                        <th>Medicamento</th>
+                                        <th>Dosis</th>
+                                        <th>Frecuencia</th>
+                                        <th>Consulta</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaRecetas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAsignarMedicamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Asignar medicamento a paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Paciente</label>
+                        <select id="pacienteAsignacion" class="form-select">
+                            <option value="">Seleccione un paciente</option>
+                            <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre + ' - ' + paciente.cedula}">Paciente</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Consulta</label>
+                        <select id="consultaAsignacion" class="form-select">
+                            <option value="">Seleccione una consulta</option>
+                            <option th:each="consulta : ${consultas}" th:value="${consulta.pkConsulta}"
+                                th:data-paciente-id="${consulta.expediente.paciente.pkPaciente}"
+                                th:text="${consulta.fechaConsulta + ' - ' + consulta.expediente.paciente.nombre + ' - ' + consulta.motivo}">Consulta</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Medicamento</label>
+                        <select id="medicamentoAsignacion" class="form-select">
+                            <option value="">Seleccione un medicamento</option>
+                            <option th:each="medicamento : ${medicamentos}" th:value="${medicamento.pkMedicamento}" th:text="${medicamento.nombre}">Medicamento</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dosis</label>
+                        <input id="dosisAsignacion" class="form-control" placeholder="Ej. 1 tableta">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Frecuencia</label>
+                        <input id="frecuenciaAsignacion" class="form-control" placeholder="Ej. Cada 8 horas">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarAsignacion" class="btn btn-primary">Asignar medicamento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Crear / Editar Medicamento -->
+    <div class="modal fade" id="modalMedicamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="tituloModalMedicamento">Nuevo medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Medicamento</label>
+                            <input type="text" id="nombreMedicamento" class="form-control" placeholder="Ej. Paracetamol">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Presentación</label>
+                            <input type="text" id="presentacionMedicamento" class="form-control" placeholder="Ej. Tabletas">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Concentración</label>
+                            <input type="text" id="concentracionMedicamento" class="form-control" placeholder="Ej. 500 mg">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Lote</label>
+                            <input type="text" id="loteMedicamento" class="form-control" placeholder="Ej. LOT-001">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Entradas</label>
+                            <input type="number" id="entradasMedicamento" class="form-control" placeholder="Ej. 150">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Salidas</label>
+                            <input type="number" id="salidasMedicamento" class="form-control" placeholder="Ej. 20">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Vencimiento</label>
+                            <input type="date" id="vencimientoMedicamento" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarMedicamento" class="btn btn-warning text-dark">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Medicamento -->
+    <div class="modal fade" id="modalVerMedicamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Detalles del Medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Medicamento:</strong> <span id="verNombre"></span></p>
+                    <p><strong>Presentación:</strong> <span id="verPresentacion"></span></p>
+                    <p><strong>Concentración:</strong> <span id="verConcentracion"></span></p>
+                    <p><strong>Entradas:</strong> <span id="verEntradas"></span></p>
+                    <p><strong>Salidas:</strong> <span id="verSalidas"></span></p>
+                    <p><strong>Lote:</strong> <span id="verLote"></span></p>
+                    <p><strong>Vencimiento:</strong> <span id="verVencimiento"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/medicamentos.js}"></script>
+</body>
+
+</html>

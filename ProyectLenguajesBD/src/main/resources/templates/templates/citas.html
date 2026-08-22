@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Star - Gestion de Citas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" th:href="@{/css/citas.css}">
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar (Menu)-->
+            <div class="col-auto sidebar position-relative">
+                <div class="logo text-center">
+                    <div class="logo-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4 class="mt-2">Clinic Star</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li>
+                        <a th:href="@{/}" class="nav-link"><i class="bi bi-speedometer2"></i> Inicio</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/pacientes}" class="nav-link"><i class="bi bi-people"></i> Pacientes</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/citas}" class="nav-link active"><i class="bi bi-calendar-event"></i> Citas</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/expediente}" class="nav-link"><i class="bi bi-folder2-open"></i> Expedientes</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/consultas}" class="nav-link"><i class="bi bi-journal-medical"></i> Consultas</a>
+                    </li>
+                     <li>
+                        <a th:href="@{/medicamentos}" class="nav-link"><i class="bi bi-capsule"></i> Medicamentos</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/medicos}" class="nav-link"><i class="bi bi-person-badge"></i> Personal Médico</a>
+                    </li>
+                </ul>
+                <div class="logout">
+                    <a th:href="@{/login}" class="nav-link">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="col contenido">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Citas</h2>
+                    <button id="btnNuevaCita" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalNuevaCita">
+                        <i class="bi bi-plus-circle"></i> Nueva cita</button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <input type="text" id="buscarCita" class="form-control" placeholder="Buscar paciente">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>Todos los estados</option>
+                                    <option>Pendiente</option>
+                                    <option>Confirmada</option>
+                                    <option>Cancelada</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100">Buscar</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Paciente</th>
+                                        <th>Fecha</th>
+                                        <th>Hora</th>
+                                        <th>Consultorio</th>
+                                        <th>Ciudad</th>
+                                        <th>Provincia</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cita : ${citas}">
+                                        <td th:text="${cita.pkCita}">0</td>
+                                        <td th:text="${cita.paciente.nombre}">Paciente</td>
+                                        <td th:text="${cita.fechaHora.toLocalDate()}">Fecha</td>
+                                        <td th:text="${cita.fechaHora.toLocalTime()}">Hora</td>
+                                        <td th:text="${cita.consultorio.numeroConsultorio}">Consultorio</td>
+                                        <td th:text="${cita.consultorio.localidad}">Localidad</td>
+                                        <td th:text="${cita.consultorio.provincia}">Provincia</td>
+                                        <td th:text="${cita.estado}">Estado</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav class="mt-4">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item disabled">
+                                    <a class="page-link">Anterior</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link">Siguiente</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nueva Cita -->
+    <div class="modal fade" id="modalNuevaCita">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Nueva cita</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Paciente</label>
+                            <select id="paciente" class="form-select">
+                                <option value="">Seleccione un paciente</option>
+                                <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Fecha</label>
+                            <input id="fecha" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Hora</label>
+                            <input id="hora" type="time" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Médico</label>
+                            <select id="medico" class="form-select">
+                                <option value="">Seleccione un médico</option>
+                                <option th:each="medico : ${medicos}" th:value="${medico.pkPersonalMedico}" th:text="${medico.nombre + ' ' + medico.apellido}">Médico</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Consultorio</label>
+                            <select id="consultorio" class="form-select">
+                                <option value="">Seleccione un consultorio</option>
+                                <option th:each="consultorio : ${consultorios}" th:value="${consultorio.pkConsultorio}" th:text="${consultorio.numeroConsultorio}">Consultorio</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Ciudad</label>
+                            <input id="duracion" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Provincia</label>
+                            <input id="provincia" class="form-control" disabled>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Estado</label>
+                            <select id="estado" class="form-select">
+                                <option>Pendiente</option>
+                                <option>Confirmada</option>
+                                <option>Cancelada</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="guardarCita" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Cita -->
+    <div class="modal fade" id="modalVerCita">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Información de la cita</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><b>Paciente:</b> <span id="verPaciente"></span></p>
+                    <p><b>Fecha:</b> <span id="verFecha"></span></p>
+                    <p><b>Hora:</b> <span id="verHora"></span></p>
+                    <p><b>Médico:</b> <span id="verMedico"></span></p>
+                    <p><b>Consultorio:</b> <span id="verConsultorio"></span></p>
+                    <p><b>Ciudad:</b> <span id="verCiudad"></span></p>
+                    <p><b>Provincia:</b> <span id="verProvincia"></span></p>
+                    <p><b>Estado:</b> <span id="verEstado"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar -->
+    <div class="modal fade" id="modalEditarCita">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Editar cita</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Paciente</label>
+                    <select id="editarPaciente" class="form-select mb-3">
+                        <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
+                    </select>
+                    <label>Fecha</label>
+                    <input id="editarFecha" type="date" class="form-control mb-3">
+                    <label>Hora</label>
+                    <input id="editarHora" type="time" class="form-control mb-3">
+                    <label>Consultorio</label>
+                    <select id="editarConsultorio" class="form-select mb-3">
+                        <option th:each="consultorio : ${consultorios}" th:value="${consultorio.pkConsultorio}" th:text="${consultorio.numeroConsultorio}">Consultorio</option>
+                    </select>
+                    <label>Duración</label>
+                    <input id="editarDuracion" class="form-control mb-3">
+                    <label>Estado</label>
+                    <select id="editarEstado" class="form-select">
+                        <option>Pendiente</option>
+                        <option>Confirmada</option>
+                        <option>Cancelada</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="actualizarCita" class="btn btn-warning">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/citas.js}"></script>
+
+</body>
+
+</html>
