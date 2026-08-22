@@ -117,18 +117,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tablaConsultas">
-                                    <tr th:each="consulta : ${consultas}">
-                                        <td th:text="${consulta.fechaConsulta}">Fecha</td>
-                                        <td th:text="${consulta.expediente.paciente.nombre}">Paciente</td>
-                                        <td th:text="${consulta.personalMedico.nombre + ' ' + consulta.personalMedico.apellido}">Médico</td>
-                                        <td th:text="${consulta.motivo}">Motivo</td>
-                                        <td th:text="${consulta.diagnostico != null ? consulta.diagnostico.descripcion : ''}">Diagnóstico</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-info btn-sm accion-btn" data-action="ver"><i class="bi bi-eye"></i></button>
-                                            <button class="btn btn-warning btn-sm accion-btn" data-action="editar"><i class="bi bi-pencil-square"></i></button>
-                                            <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button>
-                                        </td>
-                                    </tr>
+                                    <!-- Las filas se cargan con JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -159,6 +148,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label>Fecha</label>
+                                    <!-- CAMBIO: añadido min dinámico con JS -->
                                     <input type="date" id="fechaConsulta" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -190,10 +180,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Diagnóstico</label>
-                                    <select id="diagnosticoConsulta" class="form-select">
-                                        <option value="">Sin diagnóstico</option>
-                                        <option th:each="diagnostico : ${diagnosticos}" th:value="${diagnostico.pkDiagnostico}" th:text="${diagnostico.descripcion}">Diagnóstico</option>
-                                    </select>
+                                    <input type="text" id="diagnosticoConsulta" class="form-control" placeholder="Escriba el diagnóstico...">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Observaciones</label>
@@ -242,6 +229,13 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="filaEditar">
+                        <!-- CAMBIO: añadido campo fecha en edición -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Fecha</label>
+                                <input type="date" id="editarFecha" class="form-control">
+                            </div>
+                        </div>
                         <label>Paciente</label>
                         <select id="editarPaciente" class="form-select mb-3">
                             <option th:each="paciente : ${pacientes}" th:value="${paciente.pkPaciente}" th:text="${paciente.nombre}">Paciente</option>
@@ -260,10 +254,7 @@
                         <label>Motivo de consulta</label>
                         <input id="editarMotivo" class="form-control mb-3">
                         <label>Diagnóstico</label>
-                        <select id="editarDiagnostico" class="form-select mb-3">
-                            <option value="">Sin diagnóstico</option>
-                            <option th:each="diagnostico : ${diagnosticos}" th:value="${diagnostico.pkDiagnostico}" th:text="${diagnostico.descripcion}">Diagnóstico</option>
-                        </select>
+                        <input id="editarDiagnostico" class="form-control mb-3" placeholder="Escriba el diagnóstico...">
                         <label>Observaciones</label>
                         <input id="editarObservaciones" class="form-control">
                     </div>
