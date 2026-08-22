@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tabla = document.querySelector('table tbody');
-    const buscar = document.getElementById('buscarCita');
+    const buscarInput = document.getElementById('buscarCita');
+    const estadoSelect = document.getElementById('filtrarEstado');
+    const btnBuscar = document.getElementById('btnBuscarCita');
     let citaEnEdicion = null;
 
     cargarCitas();
@@ -19,34 +21,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="btn btn-danger btn-sm accion-btn" data-action="eliminar"><i class="bi bi-trash"></i></button></td>
             </tr>`;
         }).join('');
+
+        // Aplicar filtros después de cargar (por si hay selección previa)
+        aplicarFiltros();
     }
 
-    buscar.addEventListener('keyup', () => {
-        const texto = buscar.value.toLowerCase();
-        tabla.querySelectorAll('tr').forEach(fila => fila.style.display = fila.textContent.toLowerCase().includes(texto) ? '' : 'none');
-    });
+    // ========== FILTRO COMBINADO ==========
+    function aplicarFiltros() {
+        const texto = buscarInput.value.toLowerCase().trim();
+        const estado = estadoSelect.value;
 
+        const filas = tabla.querySelectorAll('tr');
+        filas.forEach(fila => {
+            const textoFila = fila.textContent.toLowerCase();
+            const estadoFila = fila.cells[7]?.textContent.trim() || '';
+
+            let coincideTexto = texto === '' || textoFila.includes(texto);
+            let coincideEstado = estado === '' || estado === 'Todos' || estadoFila === estado;
+
+            fila.style.display = (coincideTexto && coincideEstado) ? '' : 'none';
+        });
+    }
+
+    // Eventos para filtrar
+    buscarInput.addEventListener('keyup', aplicarFiltros);
+    estadoSelect.addEventListener('change', aplicarFiltros);
+    btnBuscar.addEventListener('click', aplicarFiltros);
+
+    // ========== GUARDAR NUEVA CITA ==========
     document.getElementById('guardarCita').addEventListener('click', async () => {
         const fecha = document.getElementById('fecha').value;
         const hora = document.getElementById('hora').value;
         const medicoId = Number(document.getElementById('medico').value);
-        const datos = {pacienteId: Number(document.getElementById('paciente').value),
-            consultorioId: Number(document.getElementById('consultorio').value), medicoId,
+        const datos = {
+            pacienteId: Number(document.getElementById('paciente').value),
+            consultorioId: Number(document.getElementById('consultorio').value),
+            medicoId,
             fechaHora: `${fecha}T${hora}`,
-            duracion: document.getElementById('duracion').value, estado: document.getElementById('estado').value};
+            duracion: document.getElementById('duracion').value,
+            estado: document.getElementById('estado').value
+        };
         if (!datos.pacienteId || !datos.consultorioId || !medicoId || !fecha || !hora) {
             alert('Complete los campos obligatorios, incluyendo el médico');
             return;
         }
-        await fetch('/api/citas', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)});
+        await fetch('/api/citas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
         bootstrap.Modal.getInstance(document.getElementById('modalNuevaCita')).hide();
         await cargarCitas();
     });
 
+    // ========== EVENTOS EN TABLA (VER, EDITAR, ELIMINAR) ==========
     tabla.addEventListener('click', async event => {
         const boton = event.target.closest('.accion-btn');
         if (!boton) return;
         const fila = boton.closest('tr');
+
         if (boton.dataset.action === 'ver') {
             document.getElementById('verPaciente').textContent = fila.cells[1].textContent;
             document.getElementById('verFecha').textContent = fila.cells[2].textContent;
@@ -65,18 +98,28 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('editarDuracion').value = fila.dataset.duracion;
             document.getElementById('editarEstado').value = fila.cells[7].textContent;
             new bootstrap.Modal(document.getElementById('modalEditarCita')).show();
-        } else if (boton.dataset.action === 'eliminar' && confirm('¿Eliminar esta cita?')) {
-            await fetch(`/api/citas/${fila.dataset.id}`, {method: 'DELETE'});
-            await cargarCitas();
+        } else if (boton.dataset.action === 'eliminar') {
+            if (confirm('¿Eliminar esta cita?')) {
+                await fetch(`/api/citas/${fila.dataset.id}`, { method: 'DELETE' });
+                await cargarCitas();
+            }
         }
     });
 
+    // ========== ACTUALIZAR CITA ==========
     document.getElementById('actualizarCita').addEventListener('click', async () => {
-        const datos = {pacienteId: Number(document.getElementById('editarPaciente').value),
+        const datos = {
+            pacienteId: Number(document.getElementById('editarPaciente').value),
             consultorioId: Number(document.getElementById('editarConsultorio').value),
             fechaHora: `${document.getElementById('editarFecha').value}T${document.getElementById('editarHora').value}`,
-            duracion: document.getElementById('editarDuracion').value, estado: document.getElementById('editarEstado').value};
-        await fetch(`/api/citas/${citaEnEdicion.dataset.id}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)});
+            duracion: document.getElementById('editarDuracion').value,
+            estado: document.getElementById('editarEstado').value
+        };
+        await fetch(`/api/citas/${citaEnEdicion.dataset.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
         bootstrap.Modal.getInstance(document.getElementById('modalEditarCita')).hide();
         await cargarCitas();
     });
