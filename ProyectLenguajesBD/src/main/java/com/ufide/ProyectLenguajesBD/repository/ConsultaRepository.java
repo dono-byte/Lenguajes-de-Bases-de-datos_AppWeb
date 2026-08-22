@@ -2,6 +2,7 @@ package com.ufide.ProyectLenguajesBD.repository;
 
 import com.ufide.ProyectLenguajesBD.entity.Consulta;
 import com.ufide.ProyectLenguajesBD.entity.Expediente;
+import com.ufide.ProyectLenguajesBD.entity.Paciente;
 import com.ufide.ProyectLenguajesBD.entity.PersonalMedico;
 import com.ufide.ProyectLenguajesBD.entity.Diagnostico;
 import com.ufide.ProyectLenguajesBD.entity.Cita;
@@ -43,8 +44,7 @@ public class ConsultaRepository {
                 .withProcedureName("GET_CONSULTA")
                 .declareParameters(
                         new SqlParameter("p_id", Types.INTEGER),
-                        new SqlOutParameter("p_result", OracleTypes.CURSOR, rowMapper)
-                );
+                        new SqlOutParameter("p_result", OracleTypes.CURSOR, rowMapper));
 
         this.insConsultaCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("PKG_CRUD_SISTEMA")
@@ -56,8 +56,7 @@ public class ConsultaRepository {
                         new SqlParameter("p_fk_cita", Types.INTEGER),
                         new SqlParameter("p_fecha_consulta", Types.DATE),
                         new SqlParameter("p_motivo", Types.VARCHAR),
-                        new SqlParameter("p_observaciones", Types.VARCHAR)
-                );
+                        new SqlParameter("p_observaciones", Types.VARCHAR));
 
         this.updConsultaCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("PKG_CRUD_SISTEMA")
@@ -70,29 +69,25 @@ public class ConsultaRepository {
                         new SqlParameter("p_fk_cita", Types.INTEGER),
                         new SqlParameter("p_fecha_consulta", Types.DATE),
                         new SqlParameter("p_motivo", Types.VARCHAR),
-                        new SqlParameter("p_observaciones", Types.VARCHAR)
-                );
+                        new SqlParameter("p_observaciones", Types.VARCHAR));
 
         this.delConsultaCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("PKG_CRUD_SISTEMA")
                 .withProcedureName("DEL_CONSULTA")
                 .declareParameters(
-                        new SqlParameter("p_id", Types.INTEGER)
-                );
+                        new SqlParameter("p_id", Types.INTEGER));
 
         this.getConsultasPorExpedienteCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName("GET_CONSULTAS_POR_EXPEDIENTE")
                 .declareParameters(
                         new SqlParameter("p_expediente_id", Types.INTEGER),
-                        new SqlOutParameter("p_cursor", OracleTypes.CURSOR, rowMapper)
-                );
+                        new SqlOutParameter("p_cursor", OracleTypes.CURSOR, rowMapper));
 
         this.getConsultasPorMedicoCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName("GET_CONSULTAS_POR_MEDICO")
                 .declareParameters(
                         new SqlParameter("p_medico_id", Types.INTEGER),
-                        new SqlOutParameter("p_cursor", OracleTypes.CURSOR, rowMapper)
-                );
+                        new SqlOutParameter("p_cursor", OracleTypes.CURSOR, rowMapper));
     }
 
     private static class ConsultaRowMapper implements RowMapper<Consulta> {
@@ -141,21 +136,71 @@ public class ConsultaRepository {
     }
 
     public List<Consulta> findAll() {
-    String sql = "SELECT c.*, p.NOMBRE AS PACIENTE_NOMBRE, pm.NOMBRE AS MEDICO_NOMBRE, pm.APELLIDO AS MEDICO_APELLIDO, d.DESCRIPCION AS DIAGNOSTICO_DESCRIPCION " +
-                 "FROM CONSULTA c " +
-                 "JOIN EXPEDIENTE e ON c.FK_EXPEDIENTE = e.PK_EXPEDIENTE " +
-                 "JOIN PACIENTE p ON e.FK_PACIENTE = p.PK_PACIENTE " +
-                 "JOIN PERSONAL_MEDICO pm ON c.FK_PERSONAL_MEDICO = pm.PK_PERSONAL_MEDICO " +
-                 "LEFT JOIN DIAGNOSTICO d ON c.FK_DIAGNOSTICO = d.PK_DIAGNOSTICO";
-    return jdbcTemplate.query(sql, rowMapper);
-}
+        String sql = "SELECT c.PK_CONSULTA, c.FECHA_CONSULTA, c.MOTIVO, c.OBSERVACIONES, " +
+                "c.FK_EXPEDIENTE, c.FK_PERSONAL_MEDICO, c.FK_DIAGNOSTICO, c.FK_CITA, " +
+                "p.PK_PACIENTE AS PACIENTE_ID, p.NOMBRE AS PACIENTE_NOMBRE, " +
+                "pm.PK_PERSONAL_MEDICO AS MEDICO_ID, pm.NOMBRE AS MEDICO_NOMBRE, pm.APELLIDO AS MEDICO_APELLIDO, " +
+                "d.PK_DIAGNOSTICO AS DIAGNOSTICO_ID, d.DESCRIPCION AS DIAGNOSTICO_DESCRIPCION " +
+                "FROM CONSULTA c " +
+                "JOIN EXPEDIENTE e ON c.FK_EXPEDIENTE = e.PK_EXPEDIENTE " +
+                "JOIN PACIENTE p ON e.FK_PACIENTE = p.PK_PACIENTE " +
+                "JOIN PERSONAL_MEDICO pm ON c.FK_PERSONAL_MEDICO = pm.PK_PERSONAL_MEDICO " +
+                "LEFT JOIN DIAGNOSTICO d ON c.FK_DIAGNOSTICO = d.PK_DIAGNOSTICO";
+
+        return jdbcTemplate.query(sql, new RowMapper<Consulta>() {
+            @Override
+            public Consulta mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Consulta c = new Consulta();
+                c.setPkConsulta(rs.getInt("PK_CONSULTA"));
+                c.setFechaConsulta(rs.getDate("FECHA_CONSULTA").toLocalDate());
+                c.setMotivo(rs.getString("MOTIVO"));
+                c.setObservaciones(rs.getString("OBSERVACIONES"));
+
+                // Expediente y Paciente
+                Expediente e = new Expediente();
+                e.setPkExpediente(rs.getInt("FK_EXPEDIENTE"));
+                Paciente p = new Paciente();
+                p.setPkPaciente(rs.getInt("PACIENTE_ID"));
+                p.setNombre(rs.getString("PACIENTE_NOMBRE"));
+                e.setPaciente(p);
+                c.setExpediente(e);
+
+                // Personal Médico
+                PersonalMedico pm = new PersonalMedico();
+                pm.setPkPersonalMedico(rs.getInt("MEDICO_ID"));
+                pm.setNombre(rs.getString("MEDICO_NOMBRE"));
+                pm.setApellido(rs.getString("MEDICO_APELLIDO"));
+                c.setPersonalMedico(pm);
+
+                // Diagnóstico (puede ser null)
+                int diagId = rs.getInt("DIAGNOSTICO_ID");
+                if (!rs.wasNull()) {
+                    Diagnostico d = new Diagnostico();
+                    d.setPkDiagnostico(diagId);
+                    d.setDescripcion(rs.getString("DIAGNOSTICO_DESCRIPCION"));
+                    c.setDiagnostico(d);
+                }
+
+                // Cita (solo ID, si necesitas más datos, agrégalos en la consulta)
+                Cita cit = new Cita();
+                cit.setPkCita(rs.getInt("FK_CITA"));
+                c.setCita(cit);
+
+                return c;
+            }
+        });
+    }
 
     public Consulta save(Consulta consulta) {
         if (consulta.getPkConsulta() == null) {
             MapSqlParameterSource params = new MapSqlParameterSource()
-                    .addValue("p_fk_expediente", consulta.getExpediente() != null ? consulta.getExpediente().getPkExpediente() : null)
-                    .addValue("p_fk_personal_medico", consulta.getPersonalMedico() != null ? consulta.getPersonalMedico().getPkPersonalMedico() : null)
-                    .addValue("p_fk_diagnostico", consulta.getDiagnostico() != null ? consulta.getDiagnostico().getPkDiagnostico() : null)
+                    .addValue("p_fk_expediente",
+                            consulta.getExpediente() != null ? consulta.getExpediente().getPkExpediente() : null)
+                    .addValue("p_fk_personal_medico",
+                            consulta.getPersonalMedico() != null ? consulta.getPersonalMedico().getPkPersonalMedico()
+                                    : null)
+                    .addValue("p_fk_diagnostico",
+                            consulta.getDiagnostico() != null ? consulta.getDiagnostico().getPkDiagnostico() : null)
                     .addValue("p_fk_cita", consulta.getCita() != null ? consulta.getCita().getPkCita() : null)
                     .addValue("p_fecha_consulta", Date.valueOf(consulta.getFechaConsulta()))
                     .addValue("p_motivo", consulta.getMotivo())
@@ -173,9 +218,13 @@ public class ConsultaRepository {
         } else {
             MapSqlParameterSource params = new MapSqlParameterSource()
                     .addValue("p_id", consulta.getPkConsulta())
-                    .addValue("p_fk_expediente", consulta.getExpediente() != null ? consulta.getExpediente().getPkExpediente() : null)
-                    .addValue("p_fk_personal_medico", consulta.getPersonalMedico() != null ? consulta.getPersonalMedico().getPkPersonalMedico() : null)
-                    .addValue("p_fk_diagnostico", consulta.getDiagnostico() != null ? consulta.getDiagnostico().getPkDiagnostico() : null)
+                    .addValue("p_fk_expediente",
+                            consulta.getExpediente() != null ? consulta.getExpediente().getPkExpediente() : null)
+                    .addValue("p_fk_personal_medico",
+                            consulta.getPersonalMedico() != null ? consulta.getPersonalMedico().getPkPersonalMedico()
+                                    : null)
+                    .addValue("p_fk_diagnostico",
+                            consulta.getDiagnostico() != null ? consulta.getDiagnostico().getPkDiagnostico() : null)
                     .addValue("p_fk_cita", consulta.getCita() != null ? consulta.getCita().getPkCita() : null)
                     .addValue("p_fecha_consulta", Date.valueOf(consulta.getFechaConsulta()))
                     .addValue("p_motivo", consulta.getMotivo())
